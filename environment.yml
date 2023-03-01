@@ -1,0 +1,9 @@
+name: sphere-n
+channels:
+  - conda-forge
+dependencies:
+  - pytest
+  - pytest-cov
+  - pytest-benchmark
+  - numpy
+  - scipy
