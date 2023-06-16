@@ -5,7 +5,7 @@ from typing import List
 # import numexpr as ne
 import numpy as np
 
-from lds_py.lds import Circle, Sphere, Vdcorput
+from lds_py.lds import Circle, Sphere, VdCorput
 
 PI: float = np.pi
 HALF_PI: float = PI / 2.0
@@ -26,7 +26,7 @@ class CylinN(Circle):
         [0.5896942325314937, 0.4702654580212986, -0.565685424949238, -0.33333333333333337, 0.0]
     """
 
-    vdc: Vdcorput
+    vdc: VdCorput
     c_gen: Circle
 
     def __init__(self, n: int, base: List[int]) -> None:
@@ -36,7 +36,7 @@ class CylinN(Circle):
             base (List[int]): _description_
         """
         assert n >= 1
-        self.vdc = Vdcorput(base[0])
+        self.vdc = VdCorput(base[0])
         self.c_gen = Circle(base[1]) if n == 1 else CylinN(n - 1, base[1:])
 
     def pop(self) -> List[float]:
@@ -92,7 +92,7 @@ class Sphere3:
         [0.8966646826186098, 0.2913440162992141, -0.33333333333333337, 6.123233995736766e-17]
     """
 
-    vdc: Vdcorput
+    vdc: VdCorput
     sphere2: Sphere
 
     def __init__(self, base: List[int]) -> None:
@@ -101,7 +101,7 @@ class Sphere3:
         Args:
             base (List[int]): _description_
         """
-        self.vdc = Vdcorput(base[0])
+        self.vdc = VdCorput(base[0])
         self.sphere2 = Sphere(base[1:3])
 
     def reseed(self, seed: int) -> None:
@@ -141,7 +141,7 @@ class SphereN(Sphere):
         [0.6031153874276115, 0.4809684718990214, -0.5785601510223212, 0.2649326520763179, 6.123233995736766e-17]
     """
 
-    vdc: Vdcorput
+    vdc: VdCorput
     s_gen: Sphere
     n: int
 
@@ -152,7 +152,7 @@ class SphereN(Sphere):
             base (List[int]): _description_
         """
         assert n >= 2
-        self.vdc = Vdcorput(base[0])
+        self.vdc = VdCorput(base[0])
         self.s_gen = Sphere(base[1:3]) if n == 2 else SphereN(n - 1, base[1:])
         self.n = n
         tp = get_tp(n)
