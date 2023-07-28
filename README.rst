@@ -29,9 +29,9 @@
 .. image:: https://readthedocs.org/projects/sphere-n/badge/?version=latest
     :target: https://sphere-n.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
-.. image:: https://codecov.io/gh/luk036/sphere-n/branch/master/graph/badge.svg?token=7EvuzaWHMw 
+.. image:: https://codecov.io/gh/luk036/sphere-n/branch/main/graph/badge.svg?token=86zuv3iw31 
     :target: https://codecov.io/gh/luk036/sphere-n
- 
+
 ======
 sphere-n
 ======
