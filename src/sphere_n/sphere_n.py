@@ -4,7 +4,6 @@ from typing import List
 
 # import numexpr as ne
 import numpy as np
-
 from lds_py.lds import Circle, Sphere, VdCorput
 
 PI: float = np.pi
