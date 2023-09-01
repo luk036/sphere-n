@@ -39,9 +39,11 @@ sphere-n
 
     A library for low-discrepancy sequences
 
+The desirable properties of samples over n-sphere include being uniform, deterministic, and incremental. The uniformity measures are optimized with every new point, and this is because in some applications, it is unknown how many points are needed to solve the problem in advance.
 
-A longer description of your project goes here...
+Some potential applications of generating samples over n-sphere for n > 2 include robotic motion planning, spherical coding in MIMO wireless communication, cookbook for unitary matrices, multivariate empirical mode decomposition, and filter bank design.
 
+Numerical results show that the proposed method outperforms the randomly generated sequences and other proposed methods.
 
 .. _pyscaffold-notes:
 

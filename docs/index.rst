@@ -1,6 +1,6 @@
-======
+========
 sphere-n
-======
+========
 
 This is the documentation of **sphere-n**.
 

@@ -4,7 +4,7 @@ from typing import List
 
 # import numexpr as ne
 import numpy as np
-from lds_py.lds import Circle, Sphere, VdCorput
+from lds_gen.lds import Circle, Sphere, VdCorput
 
 PI: float = np.pi
 HALF_PI: float = PI / 2.0
