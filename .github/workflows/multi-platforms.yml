@@ -31,6 +31,6 @@ jobs:
         shell: bash -l {0}
         run: |
           conda install pytest
-          pip install git+https://github.com/luk036/lds-py.git
+          pip install git+https://github.com/luk036/lds-gen.git
           python setup.py develop
           pytest
