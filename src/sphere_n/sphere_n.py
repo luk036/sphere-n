@@ -1,5 +1,6 @@
 from functools import lru_cache
-from math import cos, sin, sqrt
+import math
+from abc import abstractmethod, ABC
 from typing import List
 
 # import numexpr as ne
@@ -8,56 +9,6 @@ from lds_gen.lds import Circle, Sphere, VdCorput
 
 PI: float = np.pi
 HALF_PI: float = PI / 2.0
-
-
-# CylinVariant = Union[Circle, CylinN]
-
-
-class CylinN(Circle):
-    """CylinN sequence generator
-
-    Examples:
-        >>> cgen = CylinN(3, [2, 3, 5, 7])
-        >>> cgen.reseed(0)
-        >>> for _ in range(1):
-        ...     print(cgen.pop())
-        ...
-        [0.5896942325314937, 0.4702654580212986, -0.565685424949238, -0.33333333333333337, 0.0]
-    """
-
-    vdc: VdCorput
-    c_gen: Circle
-
-    def __init__(self, n: int, base: List[int]) -> None:
-        """_summary_
-
-        Args:
-            base (List[int]): _description_
-        """
-        assert n >= 1
-        self.vdc = VdCorput(base[0])
-        self.c_gen = Circle(base[1]) if n == 1 else CylinN(n - 1, base[1:])
-
-    def pop(self) -> List[float]:
-        """_summary_
-
-        Returns:
-            List[float]: _description_
-        """
-        cosphi = 2.0 * self.vdc.pop() - 1.0  # map to [-1, 1]
-        sinphi = sqrt(1.0 - cosphi * cosphi)
-        return [xi * sinphi for xi in self.c_gen.pop()] + [cosphi]
-
-    def reseed(self, seed: int) -> None:
-        """_summary_
-
-        Args:
-            seed (int): _description_
-        """
-        self.vdc.reseed(seed)
-        self.c_gen.reseed(seed)
-
-
 X: np.ndarray = np.linspace(0.0, PI, 300)
 NEG_COSINE: np.ndarray = -np.cos(X)
 SINE: np.ndarray = np.sin(X)
@@ -79,7 +30,21 @@ def get_tp(n: int) -> np.ndarray:
     return ((n - 1) * tp_minus2 + NEG_COSINE * SINE ** (n - 1)) / n
 
 
-class Sphere3:
+class SphereGen(ABC):
+    """Base class for sphere generators."""
+
+    @abstractmethod
+    def pop(self) -> List[float]:
+        """Generates and returns a vector of values."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def reseed(self, seed: int) -> None:
+        """Reseeds the generator with a new seed."""
+        raise NotImplementedError
+
+
+class Sphere3(SphereGen):
     """Sphere3 sequence generator
 
     Examples:
@@ -120,15 +85,12 @@ class Sphere3:
         """
         ti = HALF_PI * self.vdc.pop()  # map to [0, pi/2]
         xi = np.interp(ti, get_tp(2), X)
-        cosxi = cos(xi)
-        sinxi = sin(xi)
+        cosxi = math.cos(xi)
+        sinxi = math.sin(xi)
         return [sinxi * s for s in self.sphere2.pop()] + [cosxi]
 
 
-# SphereVaiant = Union[Sphere3, SphereN]
-
-
-class SphereN(Sphere):
+class SphereN(SphereGen):
     """SphereN sequence generator
 
     Examples:
@@ -139,10 +101,6 @@ class SphereN(Sphere):
         ...
         [0.6031153874276115, 0.4809684718990214, -0.5785601510223212, 0.2649326520763179, 6.123233995736766e-17]
     """
-
-    vdc: VdCorput
-    s_gen: Sphere
-    n: int
 
     def __init__(self, n: int, base: List[int]) -> None:
         """_summary_
@@ -167,8 +125,8 @@ class SphereN(Sphere):
         tp = get_tp(self.n)
         ti = tp[0] + self.range * vd  # map to [t0, tm-1]
         xi = np.interp(ti, tp, X)
-        sinphi = sin(xi)
-        return [xi * sinphi for xi in self.s_gen.pop()] + [cos(xi)]
+        sinphi = math.sin(xi)
+        return [xi * sinphi for xi in self.s_gen.pop()] + [math.cos(xi)]
 
     def reseed(self, seed: int) -> None:
         """_summary_
@@ -178,6 +136,62 @@ class SphereN(Sphere):
         """
         self.vdc.reseed(seed)
         self.s_gen.reseed(seed)
+
+
+class Cylind(ABC):
+    """Base interface for cylindrical generators."""
+
+    @abstractmethod
+    def pop(self) -> List[float]:
+        """Generates and returns a vector of values."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def reseed(self, seed: int) -> None:
+        """Reseeds the generator with a new seed."""
+        raise NotImplementedError
+
+
+class CylinN(Cylind):
+    """CylinN sequence generator
+
+    Examples:
+        >>> cgen = CylinN(3, [2, 3, 5, 7])
+        >>> cgen.reseed(0)
+        >>> for _ in range(1):
+        ...     print(cgen.pop())
+        ...
+        [0.5896942325314937, 0.4702654580212986, -0.565685424949238, -0.33333333333333337, 0.0]
+    """
+
+    def __init__(self, n: int, base: List[int]) -> None:
+        """_summary_
+
+        Args:
+            base (List[int]): _description_
+        """
+        assert n >= 1
+        self.vdc = VdCorput(base[0])
+        self.c_gen = Circle(base[1]) if n == 1 else CylinN(n - 1, base[1:])
+
+    def pop(self) -> List[float]:
+        """_summary_
+
+        Returns:
+            List[float]: _description_
+        """
+        cosphi = 2.0 * self.vdc.pop() - 1.0  # map to [-1, 1]
+        sinphi = math.sqrt(1.0 - cosphi * cosphi)
+        return [xi * sinphi for xi in self.c_gen.pop()] + [cosphi]
+
+    def reseed(self, seed: int) -> None:
+        """_summary_
+
+        Args:
+            seed (int): _description_
+        """
+        self.vdc.reseed(seed)
+        self.c_gen.reseed(seed)
 
 
 if __name__ == "__main__":

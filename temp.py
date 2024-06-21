@@ -1,4 +1,5 @@
 import numpy as np
+import math
 from lds_gen.lds import Circle, Sphere, VdCorput
 from abc import abstractmethod, ABCMeta
 from typing import List
@@ -25,10 +26,6 @@ class SphereGen(ABCMeta):
     """Base class for sphere generators."""
 
     @abstractmethod
-    def __init__(self, n: int, base: List[int]):
-        raise NotImplementedError
-
-    @abstractmethod
     def pop(self) -> List[float]:
         """Generates and returns a vector of values."""
         raise NotImplementedError
@@ -45,6 +42,17 @@ class SphereGen(ABCMeta):
 
 
 class Sphere3(SphereGen):
+    """Sphere3 sequence generator
+
+    Examples:
+        >>> sgen = Sphere3([2, 3, 5])
+        >>> sgen.reseed(0)
+        >>> for _ in range(1):
+        ...     print(sgen.pop())
+        ...
+        [0.8966646826186098, 0.2913440162992141, -0.33333333333333337, 6.123233995736766e-17]
+    """
+
     def __init__(self, base: List[int]):
         self.vdc = VdCorput(base[0])
         self.sphere2 = Sphere(base[1:3])
@@ -57,10 +65,9 @@ class Sphere3(SphereGen):
         """Generates and returns an array of four values."""
         ti = HALF_PI * self.vdc.pop()  # map to [0, pi/2];
         xi = np.interp(ti, GL.x, X)
-        cosxi = np.cos(xi)
-        sinxi = np.sin(xi)
-        s0, s1, s2 = self.sphere2.pop()
-        return [sinxi * s0, sinxi * s1, sinxi * s2, cosxi]
+        cosxi = math.cos(xi)
+        sinxi = math.sin(xi)
+        return [sinxi * s for s in self.sphere2.pop()] + [cosxi]
 
     def reseed(self, seed: int) -> None:
         """Reseeds both internal generators."""
@@ -80,6 +87,7 @@ class NSphere(SphereGen):
             self.tp = (
                 ((n - 1) * self.s_gen.get_tp()) + GL.neg_cosine * SINE ** (n - 1)
             ) / n
+        self.range = self.tp[-1] - self.tp[0]
 
     def get_tp(self):
         return self.tp
