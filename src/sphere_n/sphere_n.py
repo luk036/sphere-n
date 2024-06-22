@@ -1,11 +1,11 @@
-from functools import lru_cache
-import math
 from abc import abstractmethod, ABC
 from typing import List
 
 # import numexpr as ne
-import numpy as np
 from lds_gen.lds import Circle, Sphere, VdCorput
+from functools import cache
+import numpy as np
+import math
 
 PI: float = np.pi
 HALF_PI: float = PI / 2.0
@@ -14,8 +14,22 @@ NEG_COSINE: np.ndarray = -np.cos(X)
 SINE: np.ndarray = np.sin(X)
 
 
-@lru_cache
-def get_tp(n: int) -> np.ndarray:
+@cache
+def get_tp_odd(n: int) -> np.ndarray:
+    """_summary_
+
+    Returns:
+        np.ndarray: _description_
+    """
+    if n == 1:
+        return NEG_COSINE
+    tp_minus2 = get_tp_odd(n - 2)  # NOQA
+    # return ne.evaluate("((n - 1) * tp_minus2 + NEG_COSINE * SINE**(n - 1)) / n")
+    return ((n - 1) * tp_minus2 + NEG_COSINE * SINE ** (n - 1)) / n
+
+
+@cache
+def get_tp_even(n: int) -> np.ndarray:
     """_summary_
 
     Returns:
@@ -23,11 +37,20 @@ def get_tp(n: int) -> np.ndarray:
     """
     if n == 0:
         return X
-    if n == 1:
-        return NEG_COSINE
-    tp_minus2 = get_tp(n - 2)  # NOQA
+    tp_minus2 = get_tp_even(n - 2)  # NOQA
     # return ne.evaluate("((n - 1) * tp_minus2 + NEG_COSINE * SINE**(n - 1)) / n")
     return ((n - 1) * tp_minus2 + NEG_COSINE * SINE ** (n - 1)) / n
+
+
+def get_tp(n: int) -> np.ndarray:
+    """_summary_
+
+    Returns:
+        np.ndarray: _description_
+    """
+    if n % 2 == 0:
+        return get_tp_even(n)
+    return get_tp_odd(n)
 
 
 class SphereGen(ABC):
@@ -84,7 +107,7 @@ class Sphere3(SphereGen):
             List[float]: _description_
         """
         ti = HALF_PI * self.vdc.pop()  # map to [0, pi/2]
-        xi = np.interp(ti, get_tp(2), X)
+        xi = np.interp(ti, get_tp_even(2), X)
         cosxi = math.cos(xi)
         sinxi = math.sin(xi)
         return [sinxi * s for s in self.sphere2.pop()] + [cosxi]
