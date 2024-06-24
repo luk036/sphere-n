@@ -15,7 +15,7 @@ def run_lds(spgen):
 
 
 def test_sphere_n():
-    spgen = SphereN(3, [2, 3, 5, 7])
+    spgen = SphereN([2, 3, 5, 7])
     measure = run_lds(spgen)
     assert measure == approx(0.9125914)
     # assert measure < 0.913
@@ -23,7 +23,7 @@ def test_sphere_n():
 
 
 def test_cylin_n():
-    cygen = CylinN(3, [2, 3, 5, 7])
+    cygen = CylinN([2, 3, 5, 7])
     measure = run_lds(cygen)
     assert measure == approx(1.0505837105828988)
     # assert measure < 1.086
