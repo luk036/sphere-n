@@ -48,9 +48,7 @@ def get_tp(n: int) -> np.ndarray:
     Returns:
         np.ndarray: _description_
     """
-    if n % 2 == 0:
-        return get_tp_even(n)
-    return get_tp_odd(n)
+    return get_tp_even(n) if n % 2 == 0 else get_tp_odd(n)
 
 
 class SphereGen(ABC):
