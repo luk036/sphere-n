@@ -1,8 +1,38 @@
+"""
+Sphere N Generator
+
+This code is a Sphere N Generator, which is designed to create points on the surface of spheres in different dimensions. It's a tool that mathematicians, scientists, or computer graphics programmers might use when they need to work with spherical shapes in multiple dimensions.
+
+The main input for this code is a list of integers, which are used as bases for generating sequences of numbers. These bases are used to initialize different types of generators that create points on spheres.
+
+The output of this code is a series of lists containing floating-point numbers. Each list represents a point on the surface of a sphere, with the number of elements in the list corresponding to the dimension of the sphere.
+
+To achieve its purpose, the code uses several mathematical concepts and algorithms. It starts by defining some constants and helper functions that are used in the calculations. These functions (get_tp_odd, get_tp_even, and get_tp) create lookup tables for mapping values in different dimensions.
+
+The code then defines several classes that generate points on spheres:
+
+1. SphereGen: This is an abstract base class that defines the common interface for all sphere generators.
+
+2. Sphere3: This class generates points on a 3-dimensional sphere. It uses a combination of Van der Corput sequences and 2-dimensional sphere points to create 3D points.
+
+3. SphereN: This class can generate points on spheres of any dimension (3 or higher). It uses a recursive approach, building higher-dimensional spheres from lower-dimensional ones.
+
+4. CylinN: This class generates points on spheres using a cylindrical mapping approach. It's for the sake of comparison with SphereN.
+
+Each of these classes has methods to generate new points (pop) and to reset the generator with a new starting point (reseed).
+
+The code achieves its purpose through a combination of mathematical transformations and recursive algorithms. It uses trigonometric functions (sine, cosine) and interpolation to map values from one range to another. The core idea is to generate sequences of numbers that, when interpreted as coordinates, create an even distribution across the surface of a sphere.
+
+An important aspect of the code is its use of caching (@cache decorator) for some functions. This improves performance by storing the results of expensive calculations so they don't need to be repeated.
+
+Overall, this code provides a flexible way to generate evenly distributed points on spheres of various dimensions, which can be useful in many scientific and graphical applications.
+"""
+
 from abc import abstractmethod, ABC
 from typing import List
 
 # import numexpr as ne
-from lds_gen.lds import Circle, Sphere, VdCorput
+from lds_gen.lds import Circle, Sphere, VdCorput  # low-discrepancy sequence generators
 from functools import cache
 import numpy as np
 import math
@@ -16,7 +46,7 @@ SINE: np.ndarray = np.sin(X)
 
 @cache
 def get_tp_odd(n: int) -> np.ndarray:
-    """_summary_
+    """table-lookup of mapping function for odd n
 
     Returns:
         np.ndarray: _description_
@@ -30,7 +60,7 @@ def get_tp_odd(n: int) -> np.ndarray:
 
 @cache
 def get_tp_even(n: int) -> np.ndarray:
-    """_summary_
+    """table-lookup of mapping function for even n
 
     Returns:
         np.ndarray: _description_
@@ -43,7 +73,7 @@ def get_tp_even(n: int) -> np.ndarray:
 
 
 def get_tp(n: int) -> np.ndarray:
-    """_summary_
+    """table-lookup of mapping function for n
 
     Returns:
         np.ndarray: _description_
@@ -77,8 +107,8 @@ class Sphere3(SphereGen):
         [0.2913440162992141, 0.8966646826186098, -0.33333333333333337, 6.123233995736766e-17]
     """
 
-    vdc: VdCorput
-    sphere2: Sphere
+    vdc: VdCorput  # Van der Corput sequence generator
+    sphere2: Sphere  # Sphere2 generator
 
     def __init__(self, base: List[int]) -> None:
         """_summary_
@@ -161,7 +191,7 @@ class SphereN(SphereGen):
 
 
 class Cylind(ABC):
-    """Base interface for cylindrical generators."""
+    """Base interface for sphere-n generators using cylindrical mapping."""
 
     @abstractmethod
     def pop(self) -> List[float]:
@@ -175,7 +205,7 @@ class Cylind(ABC):
 
 
 class CylinN(Cylind):
-    """CylinN sequence generator
+    """Low-discrepency sequence generator using cylindrical mapping.
 
     Examples:
         >>> cgen = CylinN([2, 3, 5, 7])
