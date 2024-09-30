@@ -96,7 +96,7 @@ class SphereGen(ABC):
 
 
 class Sphere3(SphereGen):
-    """Sphere3 sequence generator
+    """3-Sphere sequence generator
 
     Examples:
         >>> sgen = Sphere3([2, 3, 5])
@@ -108,7 +108,7 @@ class Sphere3(SphereGen):
     """
 
     vdc: VdCorput  # Van der Corput sequence generator
-    sphere2: Sphere  # Sphere2 generator
+    sphere2: Sphere  # 2-Sphere generator
 
     def __init__(self, base: List[int]) -> None:
         """_summary_
@@ -142,7 +142,7 @@ class Sphere3(SphereGen):
 
 
 class SphereN(SphereGen):
-    """SphereN sequence generator
+    """Sphere-N sequence generator
 
     Examples:
         >>> sgen = SphereN([2, 3, 5, 7])

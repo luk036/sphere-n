@@ -24,7 +24,6 @@ The code also provides traits and structures to allow for flexible use of the sp
 
 Overall, this code provides a sophisticated yet flexible way to generate evenly distributed points on high-dimensional spheres, which can be valuable in many scientific and computational applications.
 
- and recursive algorithms. It uses trigonometric functions (sine, cosine) and interpolation to map values from one range to another. The core idea is to generate sequences of numbers that, when interpreted as coordinates, create an even distribution across the surface of a sphere.
 
 ## Dependencies
 
