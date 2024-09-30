@@ -25,12 +25,37 @@ from sphere_n.discrep_2 import discrep_2
 from sphere_n.sphere_n import CylinN, SphereN
 
 
+# Write a function that returns a random point on the surface of a sphere
+# in n dimensions
+def random_point_on_sphere(n):
+    # Generate a random point on the surface of a sphere in n dimensions
+    # by generating a random vector and normalizing it
+    x = np.random.randn(n)
+    x /= np.linalg.norm(x)
+    return x
+
+
+def run_random():
+    # reseed
+    np.random.seed(1234)
+    npoints = 600
+    Triples = np.array([random_point_on_sphere(5) for _ in range(npoints)])
+    hull = ConvexHull(Triples)
+    triangles = hull.simplices
+    return discrep_2(triangles, Triples)
+
+
 def run_lds(spgen):
     npoints = 600
     Triples = np.array([spgen.pop() for _ in range(npoints)])
     hull = ConvexHull(Triples)
     triangles = hull.simplices
     return discrep_2(triangles, Triples)
+
+
+def test_random():
+    measure = run_random()
+    assert measure == approx(1.115508637826039)
 
 
 def test_sphere_n():
