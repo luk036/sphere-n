@@ -17,8 +17,6 @@ The code then defines several classes that generate points on spheres:
 
 3. SphereN: This class can generate points on spheres of any dimension (3 or higher). It uses a recursive approach, building higher-dimensional spheres from lower-dimensional ones.
 
-4. CylinN: This class generates points on spheres using a cylindrical mapping approach. It's for the sake of comparison with SphereN.
-
 Each of these classes has methods to generate new points (pop) and to reset the generator with a new starting point (reseed).
 
 The code achieves its purpose through a combination of mathematical transformations and recursive algorithms. It uses trigonometric functions (sine, cosine) and interpolation to map values from one range to another. The core idea is to generate sequences of numbers that, when interpreted as coordinates, create an even distribution across the surface of a sphere.
@@ -32,7 +30,7 @@ from abc import abstractmethod, ABC
 from typing import List
 
 # import numexpr as ne
-from lds_gen.lds import Circle, Sphere, VdCorput  # low-discrepancy sequence generators
+from lds_gen.lds import Sphere, VdCorput  # low-discrepancy sequence generators
 from functools import cache
 import numpy as np
 import math
@@ -188,64 +186,7 @@ class SphereN(SphereGen):
         """
         self.vdc.reseed(seed)
         self.s_gen.reseed(seed)
-
-
-class Cylind(ABC):
-    """Base interface for sphere-n generators using cylindrical mapping."""
-
-    @abstractmethod
-    def pop(self) -> List[float]:
-        """Generates and returns a vector of values."""
-        raise NotImplementedError
-
-    @abstractmethod
-    def reseed(self, seed: int) -> None:
-        """Reseeds the generator with a new seed."""
-        raise NotImplementedError
-
-
-class CylinN(Cylind):
-    """Low-discrepency sequence generator using cylindrical mapping.
-
-    Examples:
-        >>> cgen = CylinN([2, 3, 5, 7])
-        >>> cgen.reseed(0)
-        >>> for _ in range(1):
-        ...     print(cgen.pop())
-        ...
-        [0.4702654580212986, 0.5896942325314937, -0.565685424949238, -0.33333333333333337, 0.0]
-    """
-
-    def __init__(self, base: List[int]) -> None:
-        """_summary_
-
-        Args:
-            base (List[int]): _description_
-        """
-        n = len(base) - 1
-        assert n >= 1
-        self.vdc = VdCorput(base[0])
-        self.c_gen = Circle(base[1]) if n == 1 else CylinN(base[1:])
-
-    def pop(self) -> List[float]:
-        """_summary_
-
-        Returns:
-            List[float]: _description_
-        """
-        cosphi = 2.0 * self.vdc.pop() - 1.0  # map to [-1, 1]
-        sinphi = math.sqrt(1.0 - cosphi * cosphi)
-        return [xi * sinphi for xi in self.c_gen.pop()] + [cosphi]
-
-    def reseed(self, seed: int) -> None:
-        """_summary_
-
-        Args:
-            seed (int): _description_
-        """
-        self.vdc.reseed(seed)
-        self.c_gen.reseed(seed)
-
+        
 
 if __name__ == "__main__":
     import doctest

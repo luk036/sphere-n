@@ -1,28 +1,41 @@
 """
-tests\test_sp_n.py
+test_sp_n.py
 
-This code is a test file that checks the functionality of two different geometric generators: SphereN and CylinN. The main purpose of this code is to ensure that these generators produce points in a specific geometric space with expected properties.
+This code is a test suite for evaluating different methods of generating points on the surface of a high-dimensional sphere. It includes functions for generating random points, calculating a dispersion measure, and running tests on different point generation methods.
 
-The code doesn't take any direct inputs from the user. Instead, it uses predefined parameters to create instances of SphereN and CylinN generators. The output of this code is not directly visible to the user, but it produces test results that indicate whether the generators are working correctly or not.
+The main purpose of this code is to compare the quality of point distributions on a sphere using both random generation and low-discrepancy sequences (LDS). It does this by generating a set of points, creating a convex hull from those points, and then calculating a dispersion measure based on the triangles formed by the hull.
 
-The file contains two main test functions: test_sphere_n() and test_cylin_n(). Each of these functions creates a generator (SphereN or CylinN), runs a low-discrepancy sequence (LDS) test on it, and then checks if the result matches an expected value.
+The code doesn't take any direct inputs from the user. Instead, it uses predefined parameters like the number of points to generate (600) and the dimensions of the sphere (5D in the random case, 4D in the LDS cases).
 
-The core of the testing process is the run_lds() function. This function generates 600 points using the provided generator, creates a convex hull from these points, and then calculates a dispersion measure using the discrep_2() function. The dispersion measure is a way to quantify how well-distributed the points are in the geometric space.
+The primary outputs are the dispersion measures calculated for each method. These measures are then compared against expected values in the test functions.
 
-The discrep_2() function is the heart of the dispersion calculation. It takes a set of simplices (triangles in this case) and a set of points, and calculates the maximum and minimum angles between pairs of points. The difference between the arcsine of the square root of these angles gives the dispersion measure.
+The code achieves its purpose through several steps:
 
-The test functions then compare the calculated dispersion measure to an expected value using the approx() function, which allows for small differences due to floating-point arithmetic.
+1. It defines a function discrep_2 that calculates a dispersion measure for a set of points. This measure is based on the minimum and maximum angles between pairs of points in each simplex (triangle in higher dimensions) of the convex hull.
 
-The code uses several important concepts from geometry and linear algebra, such as convex hulls, dot products, and trigonometric functions. However, the main flow of the code is straightforward: generate points, calculate their distribution properties, and compare the result to an expected value.
+2. It includes a function random_point_on_sphere that generates a random point on the surface of a sphere in any number of dimensions.
 
-This testing approach helps ensure that the SphereN and CylinN generators are producing points with the expected distribution properties, which is crucial for their intended use in whatever larger system they're a part of.
+3. The run_random function generates 600 random points on a 5D sphere, creates a convex hull, and calculates the dispersion measure.
+
+4. The run_lds function does the same, but uses a provided generator (either SphereN or CylindN) to create the points instead of random generation.
+
+5. Finally, there are three test functions that run these methods and compare the results to expected values:
+    - test_random checks the random point generation
+    - test_sphere_n checks the SphereN generator
+    - test_cylin_n checks the CylindN generator
+
+The key logic flow involves generating points, creating a convex hull, and then calculating the dispersion measure. The dispersion measure itself involves finding the minimum and maximum angles between pairs of points in each simplex of the hull.
+
+This code is important because it allows comparison between random and deterministic (LDS) methods of generating points on a sphere, which can be crucial in various scientific and mathematical applications where uniform distribution of points is needed.
 """
+
 import numpy as np
 from pytest import approx
 from scipy.spatial import ConvexHull
 
+from sphere_n.sphere_n import SphereN
+from sphere_n.cylind_n import CylindN
 from sphere_n.discrep_2 import discrep_2
-from sphere_n.sphere_n import CylinN, SphereN
 
 
 # Write a function that returns a random point on the surface of a sphere
@@ -62,13 +75,9 @@ def test_sphere_n():
     spgen = SphereN([2, 3, 5, 7])
     measure = run_lds(spgen)
     assert measure == approx(0.9125914)
-    # assert measure < 0.913
-    # assert measure > 0.912
 
 
 def test_cylin_n():
-    cygen = CylinN([2, 3, 5, 7])
+    cygen = CylindN([2, 3, 5, 7])
     measure = run_lds(cygen)
     assert measure == approx(1.0505837105828988)
-    # assert measure < 1.086
-    # assert measure > 1.085
