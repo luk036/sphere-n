@@ -5,25 +5,22 @@
 
 > Generator of Low discrepancy Sequence on S_n
 
-This code implements a generator for creating low-discrepancy sequences on n-dimensional spheres. Low-discrepancy sequences are used to generate points that are evenly distributed across a space, which is useful in various fields like computer graphics, numerical integration, and Monte Carlo simulations.
+This library implements a generator for the generation of low-discrepancy sequences on n-dimensional spheres. Low-discrepancy sequences are employed to generate points that are distributed uniformly across a given space. This is a valuable technique in a number of fields, including computer graphics, numerical integration, and Monte Carlo simulations.
 
-The main purpose of this code is to provide a way to generate points on the surface of spheres of different dimensions (3D and higher). It takes as input the dimension of the sphere (n) and a set of base numbers used for the underlying sequence generation. The output is a series of vectors, where each vector represents a point on the surface of the n-dimensional sphere.
+The primary objective of this library is to facilitate the generation of points on the surface of spheres of varying dimensions, including three-dimensional and higher-dimensional spheres. The input required is the dimension of the sphere (n) and a set of base numbers to be used for the underlying sequence generation. The output is a series of vectors, with each vector representing a point on the surface of the n-dimensional sphere.
 
-The code achieves this through a combination of mathematical calculations and recursive structures. It uses several key components:
+The library achieves this through a combination of mathematical calculations and recursive structures. The library employs a number of fundamental components, including:
 
-1. The VdCorput sequence generator, which produces evenly distributed numbers between 0 and 1.
-2. Interpolation functions to map these numbers onto the surface of a sphere.
-3. SphereGen: This is an abstract base class that defines the common interface for all sphere generators.
-4. Recursive structures (Sphere3 and NSphere) to build up from lower dimensions to higher ones.
+1. The VdCorput sequence generator produces evenly distributed numbers between 0 and 1.
+2. The aforementioned numerical data is then mapped onto the surface of a sphere through the use of interpolation functions.
+3. The SphereGen module This is an abstract base class that defines the common interface for all sphere generators.
+4. The recursive structures, namely Sphere3 and NSphere, facilitate the construction of higher-dimensional spheres from their lower-dimensional counterparts.
 
-The main logic flow starts with the creation of a SphereN object, which internally uses either a Sphere3 (for 3D) or recursively creates lower-dimensional spheres for higher dimensions. When generating points, it uses the VdCorput sequence to get a base number, then applies various transformations involving sine, cosine, and interpolation to map this onto the sphere's surface.
+The primary logic flow commences with the construction of a SphereN object, which employs either a Sphere3 (for 3D) or a recursive process to generate lower-dimensional spheres for higher dimensions. In the generation of points, the VdCorput sequence is employed to obtain a base number, which is then subjected to a series of transformations involving sine, cosine, and interpolation in order to map it onto the surface of the sphere.
 
-An important aspect of the code is its use of caching (with the @cache decorater) to improve performance by storing and reusing calculated values.
+A significant feature of the library is its utilisation of caching (through the @cache decorator) to enhance performance by storing and reusing calculated values. Additionally, the library offers traits and structures that facilitate the adaptable deployment of the sphere generators. The SphereGen abstract base class defines a common interface for diverse sphere generators, whereas the NSphere and SphereN structures implement the actual generation logic.
 
-The code also provides traits and structures to allow for flexible use of the sphere generators. The SphereGen trait defines a common interface for different sphere generators, while the NSphere and SphereN structures implement the actual generation logic.
-
-Overall, this code provides a sophisticated yet flexible way to generate evenly distributed points on high-dimensional spheres, which can be valuable in many scientific and computational applications.
-
+In conclusion, this library provides a sophisticated yet flexible method for generating evenly distributed points on high-dimensional spheres, which can be advantageous in numerous scientific and computational applications.
 
 ## Dependencies
 
