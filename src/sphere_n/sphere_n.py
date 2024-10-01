@@ -186,7 +186,7 @@ class SphereN(SphereGen):
         """
         self.vdc.reseed(seed)
         self.s_gen.reseed(seed)
-        
+
 
 if __name__ == "__main__":
     import doctest

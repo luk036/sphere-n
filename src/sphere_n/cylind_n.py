@@ -25,6 +25,7 @@ import math
 PI: float = np.pi
 HALF_PI: float = PI / 2.0
 
+
 class CylindGen(ABC):
     """Base interface for n-sphere generators using cylindrical mapping."""
 
