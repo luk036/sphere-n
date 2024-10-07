@@ -5,11 +5,11 @@ The code takes a list of integers as input, which are used as bases for the low-
 
 The output of this code is a list of floating-point numbers representing coordinates on the n-dimensional sphere. Each time you call the pop() method of a CylindN object, it produces a new set of coordinates.
 
-The code achieves its purpose through a recursive algorithm. It uses two main components: a Van der Corput sequence generator (VdCorput) for one dimension, and either a Circle generator or another CylindN generator for the remaining dimensions. This recursive structure allows it to handle spheres of any dimension.
+The code achieves its purpose through a recursive algorithm. It uses two main components: a van der Corput sequence generator (VdCorput) for one dimension, and either a Circle generator or another CylindN generator for the remaining dimensions. This recursive structure allows it to handle spheres of any dimension.
 
-The main logic flow happens in the pop() method. It first generates a cosine value (cosphi) using the Van der Corput sequence, mapping it to the range [-1, 1]. Then it calculates the sine value (sinphi) using the Pythagorean identity. The method then recursively generates coordinates for lower dimensions and scales them by sinphi, finally adding cosphi as the last coordinate.
+The main logic flow happens in the pop() method. It first generates a cosine value (cosphi) using the van der Corput sequence, mapping it to the range [-1, 1]. Then it calculates the sine value (sinphi) using the Pythagorean identity. The method then recursively generates coordinates for lower dimensions and scales them by sinphi, finally adding cosphi as the last coordinate.
 
-An important data transformation occurs in the pop() method, where the uniform distribution from the Van der Corput sequence is transformed into a cosine distribution, which is necessary for proper spherical mapping.
+An important data transformation occurs in the pop() method, where the uniform distribution from the van der Corput sequence is transformed into a cosine distribution, which is necessary for proper spherical mapping.
 
 The code also includes a reseed() method, which allows you to reset the internal state of the generators. This is useful for reproducibility in scientific simulations or when you need to generate the same sequence of points multiple times.
 """
