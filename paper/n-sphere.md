@@ -272,7 +272,6 @@ The algorithm then defines two main classes:
 The Sphere3 class has methods to generate new points (pop) and to reset the generator with a new starting point (reseed).
 
 ```python
-HALF_PI: float = PI / 2.0
 X: np.ndarray = np.linspace(0.0, PI, 300)
 NEG_COSINE: np.ndarray = -np.cos(X)
 SINE: np.ndarray = np.sin(X)
@@ -284,7 +283,7 @@ class Sphere3(SphereGen):
         self.sphere2 = Sphere(base[1:3])
 
     def pop(self) -> List[float]:
-        ti = HALF_PI * self.vdc.pop()  # map to [0, π/2]
+        ti = PI * self.vdc.pop()  # map to [0, π]
         xi = np.interp(ti, F2, X)
         cosxi = math.cos(xi)
         sinxi = math.sin(xi)

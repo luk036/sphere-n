@@ -23,7 +23,6 @@ import numpy as np
 import math
 
 PI: float = np.pi
-HALF_PI: float = PI / 2.0
 
 
 class CylindGen(ABC):

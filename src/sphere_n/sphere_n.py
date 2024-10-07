@@ -36,7 +36,6 @@ import numpy as np
 import math
 
 PI: float = np.pi
-HALF_PI: float = PI / 2.0
 X: np.ndarray = np.linspace(0.0, PI, 300)
 NEG_COSINE: np.ndarray = -np.cos(X)
 SINE: np.ndarray = np.sin(X)
@@ -103,7 +102,7 @@ class Sphere3(SphereGen):
         >>> for _ in range(1):
         ...     print(sgen.pop())
         ...
-        [0.2913440162992141, 0.8966646826186098, -0.33333333333333337, 6.123233995736766e-17]
+        [3.5679351701156683e-17, 1.0980975334773578e-16, -4.0821559971578444e-17, -1.0]
     """
 
     vdc: VdCorput  # van der Corput sequence generator
@@ -133,7 +132,7 @@ class Sphere3(SphereGen):
         Returns:
             List[float]: _description_
         """
-        ti = HALF_PI * self.vdc.pop()  # map to [0, π/2]
+        ti = PI * self.vdc.pop()  # map to [0, π]
         # xi = np.interp(ti, get_tp_even(2), X)
         xi = np.interp(ti, F2, X)
         cosxi = math.cos(xi)
