@@ -40,7 +40,7 @@ X: np.ndarray = np.linspace(0.0, PI, 300)
 NEG_COSINE: np.ndarray = -np.cos(X)
 SINE: np.ndarray = np.sin(X)
 F2: np.ndarray = (X + NEG_COSINE * SINE) / 2.0
-
+HALF_PI = PI / 2.0
 
 @cache
 def get_tp_odd(n: int) -> np.ndarray:
@@ -132,8 +132,7 @@ class Sphere3(SphereGen):
         Returns:
             List[float]: _description_
         """
-        ti = PI * self.vdc.pop()  # map to [0, π]
-        # xi = np.interp(ti, get_tp_even(2), X)
+        ti = HALF_PI * self.vdc.pop()  # map to [t0, tm-1]
         xi = np.interp(ti, F2, X)
         cosxi = math.cos(xi)
         sinxi = math.sin(xi)
