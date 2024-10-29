@@ -18,6 +18,7 @@ One important data transformation happening in this code is the way it converts 
 
 Overall, exp_sphere3.py is designed to compare how well different methods can generate points on a sphere and measure how spread out those points are.
 """
+
 from __future__ import print_function
 
 import matplotlib.pyplot as plt
@@ -45,8 +46,8 @@ def dispersion(Triples):
 
 
 npoints = 2001
-n = 6
-b = PRIME_TABLE[:n-1]
+n = 4
+b = PRIME_TABLE[: n - 1]
 Triples_r = sample_spherical(npoints, n)
 spgen = SphereN(b)
 cygen = CylindN(b)
