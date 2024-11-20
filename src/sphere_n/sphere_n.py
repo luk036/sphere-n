@@ -42,6 +42,7 @@ SINE: np.ndarray = np.sin(X)
 F2: np.ndarray = (X + NEG_COSINE * SINE) / 2.0
 HALF_PI = PI / 2.0
 
+
 @cache
 def get_tp_odd(n: int) -> np.ndarray:
     """table-lookup of mapping function for odd n
