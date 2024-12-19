@@ -22,6 +22,7 @@ Overall, exp_sphere3.py is designed to compare how well different methods can ge
 from __future__ import print_function
 
 import matplotlib.pyplot as plt
+
 # import matplotlib.pylab as lab
 
 from scipy.spatial import ConvexHull
