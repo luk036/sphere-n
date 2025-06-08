@@ -1,0 +1,23 @@
+<svg viewBox="-30 -30 2108 60" xmlns="http://www.w3.org/2000/svg">
+  <line x1="0" y1="0" x2="2048" y2="0" fill="none" stroke="#038a06" stroke-width="8"/>
+  <circle cx="1024" cy="0" r="15" fill="#FA8964"/>
+  <circle cx="512"  cy="0" r="15" fill="#FA8964"/>
+  <circle cx="1536" cy="0" r="15" fill="#FA8964"/>
+  <circle cx="256"  cy="0" r="15" fill="#FA8964"/>
+  <circle cx="1280" cy="0" r="15" fill="#FA8964"/>
+  <circle cx="768"  cy="0" r="15" fill="#FA8964"/>
+  <circle cx="1792" cy="0" r="15" fill="#FA8964"/>
+  <circle cx="128"  cy="0" r="15" fill="#FA8964"/>
+  <circle cx="1152" cy="0" r="15" fill="#FA8964"/>
+  <circle cx="640"  cy="0" r="15" fill="#FA8964"/>
+  <circle cx="1664" cy="0" r="15" fill="#8964FA"/>
+  <circle cx="384"  cy="0" r="15" fill="#8964FA"/>
+  <circle cx="1408" cy="0" r="15" fill="#8964FA"/>
+  <circle cx="896"  cy="0" r="15" fill="#8964FA"/>
+  <circle cx="1920" cy="0" r="15" fill="#8964FA"/>
+  <circle cx="64"   cy="0" r="15" fill="#8964FA"/>
+  <circle cx="1088" cy="0" r="15" fill="#8964FA"/>
+  <circle cx="576"  cy="0" r="15" fill="#8964FA"/>
+  <circle cx="1600" cy="0" r="15" fill="#8964FA"/>
+  <circle cx="320"  cy="0" r="15" fill="#8964FA"/>
+</svg>

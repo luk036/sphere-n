@@ -1,0 +1,44 @@
+<svg viewBox="-1024 -1024 2048 2048" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="0" cy="0" r="1000" fill="none" stroke="#038a06" stroke-width="8"/>
+
+  <circle cx="-499" cy="866" r="25"  fill="#FA8964"/>
+  <circle cx="-500" cy="-866" r="25" fill="#FA8964"/>
+  <circle cx="766" cy="642" r="25"   fill="#FA8964"/>
+  <circle cx="-939" cy="342" r="25"  fill="#FA8964"/>
+  <circle cx="173" cy="-984" r="25"  fill="#FA8964"/>
+  <circle cx="173" cy="984" r="25"   fill="#FA8964"/>
+  <circle cx="-939" cy="-342" r="25" fill="#FA8964"/>
+  <circle cx="766" cy="-642" r="25"  fill="#FA8964"/>
+  <circle cx="973" cy="230" r="25"   fill="#FA8964"/>
+  <circle cx="-686" cy="727" r="25"  fill="#FA8964"/>
+  <circle cx="-286" cy="-957" r="25" fill="#FA8964"/>
+  <circle cx="597" cy="802" r="25"   fill="#FA8964"/>
+  <circle cx="-993" cy="116" r="25"  fill="#FA8964"/>
+  <circle cx="396" cy="-918" r="25"  fill="#FA8964"/>
+  <circle cx="-58" cy="998" r="25"   fill="#FA8964"/>
+  <circle cx="-835" cy="-549" r="25" fill="#FA8964"/>
+  <circle cx="893" cy="-448" r="25"  fill="#FA8964"/>
+  <circle cx="893" cy="448" r="25"   fill="#FA8964"/>
+  <circle cx="-835" cy="549" r="25"  fill="#FA8964"/>
+  <circle cx="-58" cy="-998" r="25"  fill="#FA8964"/>
+  <circle cx="396" cy="918" r="25"   fill="#8964FA"/>
+  <circle cx="-993" cy="-116" r="25" fill="#8964FA"/>
+  <circle cx="597" cy="-802" r="25"  fill="#8964FA"/>
+  <circle cx="-286" cy="957" r="25"  fill="#8964FA"/>
+  <circle cx="-686" cy="-727" r="25" fill="#8964FA"/>
+  <circle cx="973" cy="-230" r="25"  fill="#8964FA"/>
+  <circle cx="996" cy="77" r="25"    fill="#8964FA"/>
+  <circle cx="-565" cy="824" r="25"  fill="#8964FA"/>
+  <circle cx="-431" cy="-902" r="25" fill="#8964FA"/>
+  <circle cx="713" cy="700" r="25"   fill="#8964FA"/>
+  <circle cx="-963" cy="268" r="25"  fill="#8964FA"/>
+  <circle cx="249" cy="-968" r="25"  fill="#8964FA"/>
+  <circle cx="96" cy="995" r="25"    fill="#8964FA"/>
+  <circle cx="-910" cy="-413" r="25" fill="#8964FA"/>
+  <circle cx="813" cy="-581" r="25"  fill="#8964FA"/>
+  <circle cx="952" cy="305" r="25"   fill="#8964FA"/>
+  <circle cx="-740" cy="672" r="25"  fill="#8964FA"/>
+  <circle cx="-211" cy="-977" r="25" fill="#8964FA"/>
+  <circle cx="533" cy="845" r="25"   fill="#8964FA"/>
+  <circle cx="-999" cy="38" r="25"   fill="#8964FA"/>
+</svg>
