@@ -23,22 +23,16 @@ graph TD
 
 Low discrepancy sequences play a pivotal role in numerous fields of mathematics, computer science, and engineering. These sequences provide a more uniform distribution of points than is afforded by random sampling, thereby making them invaluable tools for applications such as numerical integration, optimization, and simulation. While low discrepancy sampling methods have been extensively studied in lower dimensions, particularly in the context of spheres in three-dimensional space, there is an increasing need for efficient sampling techniques in higher dimensions.
 
-```mermaid
-graph LR
-    G[Random Sampling] -->|Issues| H[Clustering]
-    G -->|Issues| I[Gaps]
-    J[Low Discrepancy] -->|Advantages| K[Uniform Distribution]
-    J -->|Advantages| L[Computational Efficiency]
-    J -->|Advantages| M[Determinism]
-    J -->|Advantages| N[Incrementality]
-```
 
 Low discrepancy sequences offer several advantages over traditional random sampling methods, including:
 
-- Uniform distribution: They provide a uniform distribution of points, which reduces the occurrence of computational errors in a variety of applications.
-- Efficiency: These sequences are capable of attaining high accuracy with a reduced number of samples, particularly in high-dimensional spaces, thereby rendering them computationally efficient.
-- Determinism: They provide a deterministic sequence of points, which is essential for reproducibility and consistency in simulations and experiments.
-- Incrementality: They allow for the efficient addition of new points to an existing sequence, which is useful in applications where the number of points required to solve a problem is not known in advance.
+1.  **Uniformity**: Low-discrepancy sequences inherently aim for a **uniform distribution** of points. This means that the points are spread out evenly across the sampling space, minimizing areas of high concentration or sparseness.
+2.  **Determinism**: Unlike truly random sampling methods, low-discrepancy sequences are **deterministic**. This implies that for a given starting point and parameters, the sequence of points generated will always be the same, making results reproducible.
+3.  **Incrementality**: This is described as the **most important advantage** and a defining characteristic. Incrementality means that the sequences can **grow progressively**.
+    *   **Dynamic Distribution**: Every time a new point is added to the sequence, the **overall distribution remains relatively uniform**. This is crucial for applications where the required number of samples is unknown beforehand.
+    *   **Flexibility in Applications**: In fields such as robotics, one might not know precisely how many samples are needed, potentially stopping after a few points or switching strategies. Low-discrepancy sequences accommodate this by **maintaining uniform distribution** with each new point.
+
+Despite their advantages, low-discrepancy sequences are not without drawbacks. The primary disadvantage noted is that as the **number of points increases, the process of generating them becomes slower**.
 
 As we proceed to higher dimensions, a number of challenges emerge that must be addressed in order to facilitate progress. One such challenge is the curse of dimensionality. As the number of dimensions increases, the attainment of a uniform distribution becomes increasingly challenging. While sampling methods for three-dimensional spherical surfaces are well-established, the theory for higher dimensions remains a developing field of study. The following technical challenges must be addressed: A paucity of comprehensive sampling strategies that can be universally applied across all dimensions while preserving uniformity, determinism, and incrementality persists.
 
@@ -60,19 +54,11 @@ The following is a description of the organization of the paper: Section 2 provi
 
 ## Basic: van der Corput sequence
 
-```mermaid
-flowchart LR
-    subgraph van der Corput Sequence
-    A[Integer k] --> B[Convert to base b]
-    B --> C[Reverse digits]
-    C --> D[Add radix point]
-    D --> E[Decimal fraction]
-    end
-```
-
 The van der Corput sequence is a mathematical sequence that is employed to generate a series of evenly distributed numbers between 0 and 1. This function is of particular utility in a multitude of fields, including but not limited to computer graphics and numerical analysis. The van der Corput sequence is a low-discrepancy sequence used to generate uniformly distributed points in the interval [0,1]. It is constructed by means of a specific base (usually prime).
 
 ![Example of van der Corput sequence](./vdcorput.svg)
+
+**Illustrative Example**: To demonstrate incrementality, we suggest an approach involves using two different colors. For instance, the **first ten points might be orange**, and the **next ten points might be purple**. When viewed separately, both the orange points and the purple points are quite uniform. Crucially, when these two sets are combined, the **overall distribution continues to remain uniform**. This characteristic is generally not achievable by other sampling methods.
 
 ```python
 def vdc(k: int, base: int = 2) -> float:
@@ -351,29 +337,90 @@ In conclusion, this algorithm provides a method for generating a sequence of poi
 
 # Our approach
 
-## 3-sphere
+### Uniform Sampling on a Unit Disk: A Simple Solution
 
-```mermaid
-flowchart TD
-    A[vdC Sequence] --> B[θ3 angle]
-    C[Sphere2] --> D[θ1,θ2]
-    B & D --> E[Polar Coordinates]
-    E --> F[x0,x1,x2,x3]
+A recent realization regarding uniform sampling on a unit disk revealed a remarkably simple solution. To achieve uniform distribution, one must examine the **surface element** and understand its properties.
+
+For a unit disk, the surface element is straightforward:
+$$
+dA = r \, dr \, d\theta \tag{1}
+$$
+
+When this surface element is integrated, the result related to the radial component becomes $r^2$.
+$$
+\int r \, dr = \frac{1}{2} r^2 \tag{2}
+$$
+
+To achieve a uniform distribution, an **inverse function** must be applied. In this specific case, the inverse function is simply taking the **square root**. Thus, where \(r^2\) was present, one would instead use \(\sqrt{r}\). This method has been confirmed to work and achieve the desired uniform effect, applying to both the circumference and the interior of the circle, making it easier to understand. The implementation of this is described as quite straightforward.
+
+How to generate the point set
+
+- $\theta = 2\pi\cdot\mathrm{vdc}(k,b_1)$ % map to $[0,2\pi]$
+- $r = \sqrt{\mathrm{vdc}(k,b_2)}$
+- $[x, y] = [r\cos\theta, r\sin\theta]$
+
+![Example of Unit Disk sequence](disk.svg)
+
+```python
+class Disk:
+    def __init__(self, base: Sequence[int]) -> None:
+        self.vdc0 = VdCorput(base[0])
+        self.vdc1 = VdCorput(base[1])
+
+    def pop(self) -> List[float]:
+        theta = self.vdc0.pop() * TWO_PI  # map to [0, 2π]
+        radius = sqrt(self.vdc1.pop())  # map to [0, 1]
+        return [radius * cos(theta), radius * sin(theta)]
+
 ```
 
-This algorithm is part of a Sphere N Generator, which is designed to create points on the surface of spheres in different dimensions. It's a tool that could be used by people working with 3D graphics or mathematical simulations.
+Examples:
 
-The main input for this algorithm is a list of integers, which are used as bases for generating sequences of numbers. These bases are used to initialize different types of generators that create points on spheres.
+```python
+>>> dgen = Disk([2, 3])
+>>> for _ in range(6):
+...     print(dgen.pop())
+...
+[-0.5773502691896257, 7.070501591499379e-17]
+[4.9995996217394874e-17, 0.816496580927726]
+[-6.123233995736765e-17, -0.3333333333333333]
+[0.4714045207910317, 0.4714045207910317]
+[-0.6236095644623236, -0.6236095644623234]
+[-0.3333333333333333, 0.33333333333333337]
+```
 
-The output of this algorithm is a series of lists containing floating-point numbers. Each list represents a point on the surface of a sphere, with the number of elements in the list corresponding to the dimension of the sphere.
 
-To achieve its purpose, the algorithm starts by defining some constants and helper functions that are used in the calculations. These functions (get_tp_odd, get_tp_even, and get_tp) create lookup tables for mapping values in different dimensions.
+### Higher Dimensions (S³ and n-dimensional Spheres)
 
-The algorithm then defines two main classes:
+The complexity significantly increases when dealing with higher dimensions, such as **S³** (a 3-sphere).
 
-1. SphereGen: This is a template class that defines what methods all sphere generators should have.
+Overall, this algorithm provides a way to generate evenly distributed points on the surface of a 4-dimensional sphere, which can be useful in many scientific and graphical applications. It's designed to be efficient and flexible, allowing for different configurations based on the input bases provided.
 
-2. Sphere3: This class generates points on a 4-dimensional sphere. It uses a combination of special sequences (van der Corput and 3-dimensional sphere points) to create 4D points.
+- Polar coordinates:
+
+  - $x_0 = \cos\theta_3$
+
+  - $x_1 = \sin\theta_3 \cos\theta_2$
+
+  - $x_2 = \sin\theta_3 \sin\theta_2 \cos\theta_1$
+
+  - $x_3 = \sin\theta_3 \sin\theta_2 \sin\theta_1$
+
+- Spherical surface element:
+
+  $$dA  = \sin^{2}(\theta_3)\sin(\theta_2)\,d\theta_1 \, d\theta_2 d\theta_3$$
+
+
+How to Generate the Point Set:
+
+- $p_0 = [\cos\theta_0, \sin\theta_0]$ where $\theta_0 = 2\pi\cdot\mathrm{vdc}(k,b_0)$
+- Let $f_2(\theta)$ = $\int\sin^2\theta \mathrm{d}\theta$, where $\theta\in (0,\pi)$:
+    $$f_2(\theta) = (1/2)(\theta - \cos\theta \sin\theta).$$
+- Map $\mathrm{vdc}(k,b_2)$ to $f_2(\theta)$: $t_2 = (\pi/2) \mathrm{vdc}(k,b_2)$
+- Let $\theta_2 = f_2^{-1}(t_2)$ (use table lookup)
+- $p_2 = [\sin\theta_2 \cdot p_1, \cos\theta_1]$
+
+This recursive structure for handling higher dimensions can be visualized conceptually:
 
 The Sphere3 class has methods to generate new points (pop) and to reset the generator with a new starting point (reseed).
 
@@ -405,24 +452,32 @@ Example usage:
 
 The algorithm achieves its purpose through a combination of mathematical transformations. It uses trigonometric functions (sine, cosine) and interpolation to map values from one range to another. The core idea is to generate sequences of numbers that, when interpreted as coordinates, create an even distribution across the surface of a sphere.
 
-Overall, this algorithm provides a way to generate evenly distributed points on the surface of a 4-dimensional sphere, which can be useful in many scientific and graphical applications. It's designed to be efficient and flexible, allowing for different configurations based on the input bases provided.
+## N-sphere
 
-- Polar coordinates:
+*   **Complex Surface Elements**: For S³, the **surface element becomes more complex**, and consequently, the **inverse function is not as obvious**. This is because the surface element itself has a more complicated form.
+*   **Recursive Approach**: To tackle this, a **recursive approach** is employed. The strategy is to understand lower-dimensional spheres first and then build up to higher ones:
+    *   **S⁰ (a point)**: This case is **trivial**.
+    *   **S¹ (the circle)**: This case is **already solved** (as discussed with the unit disk).
+    *   **π case (hemisphere)**: This case is also **handled**.
+    *   All these lower-dimensional cases involve inverse functions.
+*   **S³ Case and Beyond**: For the S³ case, understanding the integral is necessary, which can be expressed recursively. However, a significant challenge arises: the **inverse function for S³ cannot be expressed in a closed form**.
+*   **Numerical Table Lookup**: Due to the lack of a closed-form solution for the inverse function in higher dimensions, a **numerical table lookup** method is used instead. The code implementation reflects this approach, making the solution less obvious compared to lower dimensions.
+*   **Generalization to n-dimensional Spheres**: The same recursive approach is applied to **n-dimensional spheres**. The function definition itself is recursive, and its implementation relies on **lookup tables for higher dimensions**.
+*   **Closed-Form Limitations**: It is explicitly stated that **only for dimensions 0 and 1 can closed-form inverse functions be found**. For all higher dimensions, **table lookup is necessary**.
 
-  - $x_0 = \cos\theta_3$
+This algorithm is part of a Sphere N Generator, which is designed to create points on the surface of spheres in different dimensions. It's a tool that could be used by people working with 3D graphics or mathematical simulations.
 
-  - $x_1 = \sin\theta_3 \cos\theta_2$
+The main input for this algorithm is a list of integers, which are used as bases for generating sequences of numbers. These bases are used to initialize different types of generators that create points on spheres.
 
-  - $x_2 = \sin\theta_3 \sin\theta_2 \cos\theta_1$
+The output of this algorithm is a series of lists containing floating-point numbers. Each list represents a point on the surface of a sphere, with the number of elements in the list corresponding to the dimension of the sphere.
 
-  - $x_3 = \sin\theta_3 \sin\theta_2 \sin\theta_1$
+To achieve its purpose, the algorithm starts by defining some constants and helper functions that are used in the calculations. These functions (get_tp_odd, get_tp_even, and get_tp) create lookup tables for mapping values in different dimensions.
 
-- Spherical surface element:
+The algorithm then defines two main classes:
 
-  $$dA  = \sin^{2}(\theta_3)\sin(\theta_2)\,d\theta_1 \, d\theta_2 d\theta_3$$
+1. SphereGen: This is a template class that defines what methods all sphere generators should have.
 
-
-## n-sphere
+2. Sphere3: This class generates points on a 4-dimensional sphere. It uses a combination of special sequences (van der Corput and 3-dimensional sphere points) to create 4D points.
 
 ```mermaid
 flowchart TD
