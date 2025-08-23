@@ -83,3 +83,37 @@ def test_cylin_n():
     cygen.reseed(0)
     measure = run_lds(cygen)
     assert measure == approx(1.0505837105828988)
+
+def test_cylind_n_dimension():
+    cgen = CylindN([2, 3, 5, 7])
+    vec = cgen.pop()
+    assert len(vec) == 5
+
+def test_cylind_n_normalization():
+    cgen = CylindN([2, 3, 5, 7])
+    vec = cgen.pop()
+    assert np.linalg.norm(vec) == approx(1.0)
+
+def test_discrep_2():
+    K = np.array([[0, 1, 2]])
+    X = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+    result = discrep_2(K, X)
+    assert isinstance(result, float)
+
+def test_sphere_n_dimension():
+    sgen = SphereN([2, 3, 5, 7])
+    vec = sgen.pop()
+    assert len(vec) == 5
+
+def test_sphere_n_normalization():
+    sgen = SphereN([2, 3, 5, 7])
+    vec = sgen.pop()
+    assert np.linalg.norm(vec) == approx(1.0)
+
+def test_sphere_n_reseed():
+    sgen = SphereN([2, 3, 5, 7])
+    sgen.reseed(0)
+    vec1 = sgen.pop()
+    sgen.reseed(0)
+    vec2 = sgen.pop()
+    assert vec1 == vec2
