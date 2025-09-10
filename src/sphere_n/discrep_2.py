@@ -1,6 +1,8 @@
 import numpy as np
+from numba import jit
 
 
+@jit
 def discrep_2(K, X):
     """dispersion measure
 
