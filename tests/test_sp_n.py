@@ -33,9 +33,9 @@ import numpy as np
 from pytest import approx
 from scipy.spatial import ConvexHull
 
-from sphere_n.sphere_n import SphereN
 from sphere_n.cylind_n import CylindN
 from sphere_n.discrep_2 import discrep_2
+from sphere_n.sphere_n import SphereN
 
 
 # Write a function that returns a random point on the surface of a sphere
@@ -84,15 +84,18 @@ def test_cylin_n():
     measure = run_lds(cygen)
     assert measure == approx(1.0505837105828988)
 
+
 def test_cylind_n_dimension():
     cgen = CylindN([2, 3, 5, 7])
     vec = cgen.pop()
     assert len(vec) == 5
 
+
 def test_cylind_n_normalization():
     cgen = CylindN([2, 3, 5, 7])
     vec = cgen.pop()
     assert np.linalg.norm(vec) == approx(1.0)
+
 
 def test_discrep_2():
     K = np.array([[0, 1, 2]])
@@ -100,15 +103,18 @@ def test_discrep_2():
     result = discrep_2(K, X)
     assert isinstance(result, float)
 
+
 def test_sphere_n_dimension():
     sgen = SphereN([2, 3, 5, 7])
     vec = sgen.pop()
     assert len(vec) == 5
 
+
 def test_sphere_n_normalization():
     sgen = SphereN([2, 3, 5, 7])
     vec = sgen.pop()
     assert np.linalg.norm(vec) == approx(1.0)
+
 
 def test_sphere_n_reseed():
     sgen = SphereN([2, 3, 5, 7])

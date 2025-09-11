@@ -25,7 +25,7 @@ In conclusion, this library provides a sophisticated yet flexible method for gen
 ## Dependencies
 
 - [luk036/lds-gen](https://github.com/luk036/lds-gen)
-- numpy 
+- numpy
 - scipy (for testing only)
 
 ## 👀 See also

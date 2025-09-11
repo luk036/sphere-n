@@ -1,14 +1,14 @@
 from __future__ import print_function
 
 import matplotlib.pyplot as plt
+import numpy as np
+from lds_gen.lds import Sphere3Hopf
+from scipy.spatial import ConvexHull
+
+from sphere_n.discrep_2 import discrep_2
+from sphere_n.sphere_n import Sphere3
 
 # import matplotlib.pylab as lab
-
-from scipy.spatial import ConvexHull
-import numpy as np
-from sphere_n.sphere_n import Sphere3
-from lds_gen.lds import Sphere3Hopf
-from sphere_n.discrep_2 import discrep_2
 
 
 def sample_spherical(npoints, ndim=3):

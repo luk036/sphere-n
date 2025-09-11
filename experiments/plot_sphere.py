@@ -1,13 +1,13 @@
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 import numpy as np
+from lds_gen.lds import Sphere
 
 # Luk ???
 # from mpl_toolkits.mplot3d import Axes3D
 from scipy.spatial import ConvexHull
 
 from sphere_n.discrep_2 import discrep_2
-from lds_gen.lds import Sphere
 
 
 def average_g(triples):
