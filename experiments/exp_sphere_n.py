@@ -1,22 +1,39 @@
 """
 exp_sphere3.py
 
-This code is designed to compare how well three different methods can generate points on a sphere, and then measure how "spread out" those points are.
+This code is designed to compare how well three different methods can generate
+points on a sphere, and then measure how "spread out" those points are.
 
 The input(s) it takes are:
 
 - The number of points to generate (in this case, 2001)
-- The dimension of the space where these points will be generated (in this case, 4)
+- The dimension of the space where these points will be generated (in this
+  case, 4)
 
-As for what output(s) it produces, the code generates three sets of points on a sphere using different methods: one set is randomly generated, another set follows a specific pattern called a Hopf generator, and the third set uses a custom method. It then measures how "spread out" each set of points is.
+As for what output(s) it produces, the code generates three sets of points on a
+sphere using different methods: one set is randomly generated, another set
+follows a specific pattern called a Hopf generator, and the third set uses a
+custom method. It then measures how "spread out" each set of points is.
 
-To achieve its purpose, the code first defines two functions to generate these sets of points: sample_spherical generates random points on a sphere, while dispersion calculates how spread out a set of points are. The code then uses these functions to create three sets of points and calculate their dispersion values.
+To achieve its purpose, the code first defines two functions to generate these
+sets of points: sample_spherical generates random points on a sphere, while
+dispersion calculates how spread out a set of points are. The code then uses
+these functions to create three sets of points and calculate their dispersion
+values.
 
-The important logic flow in this code is the way it measures the dispersion of each set of points. Dispersion is like a measure of how "spread out" or "scattered" the points are. The code does this by creating triangles from the points, calculating the area of these triangles, and then averaging them to get an idea of how spread out the points are.
+The important logic flow in this code is the way it measures the dispersion of
+each set of points. Dispersion is like a measure of how "spread out" or
+"scattered" the points are. The code does this by creating triangles from the
+points, calculating the area of these triangles, and then averaging them to get
+an idea of how spread out the points are.
 
-One important data transformation happening in this code is the way it converts the generated points into a format that can be used to calculate their dispersion. This involves converting the points from a 4-dimensional space into a set of coordinates that can be used by the dispersion function.
+One important data transformation happening in this code is the way it converts
+the generated points into a format that can be used to calculate their
+dispersion. This involves converting the points from a 4-dimensional space into
+a set of coordinates that can be used by the dispersion function.
 
-Overall, exp_sphere3.py is designed to compare how well different methods can generate points on a sphere and measure how spread out those points are.
+Overall, exp_sphere3.py is designed to compare how well different methods can
+generate points on a sphere and measure how spread out those points are.
 """
 
 from __future__ import print_function
