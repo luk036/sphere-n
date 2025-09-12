@@ -5,6 +5,5 @@ dependencies:
   - pytest
   - pytest-cov
   - pytest-benchmark
-  - lds-gen
   - numpy
   - scipy
