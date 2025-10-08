@@ -13,7 +13,7 @@ def discrep_2(K, X):
     """
     nsimplex, n = K.shape
     maxq = 0
-    minq = 1000
+    minq = np.inf
     for k in range(nsimplex):
         p = X[K[k, :], :]
         for i in range(n - 1):
