@@ -3,7 +3,7 @@
 import math
 from abc import ABC, abstractmethod
 from functools import cache
-from typing import List
+from typing import List, Union
 
 import numpy as np
 from lds_gen.lds import Sphere, VdCorput  # low-discrepancy sequence generators
@@ -117,6 +117,8 @@ class SphereN(SphereGen):
         ...
         [0.4809684718990214, 0.6031153874276115, -0.5785601510223212, 0.2649326520763179, 6.123233995736766e-17]
     """
+
+    s_gen: Union[Sphere, "SphereN"]
 
     def __init__(self, base: List[int]) -> None:
         """Initializes the n-sphere generator.
