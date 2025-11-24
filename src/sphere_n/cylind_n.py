@@ -44,8 +44,8 @@ class CylindN(CylindGen):
         """
         n = len(base) - 1
         assert n >= 1
-        self.vdc = VdCorput(base[0])
-        self.c_gen = Circle(base[1]) if n == 1 else CylindN(base[1:])
+        self.vdc: VdCorput = VdCorput(base[0])
+        self.c_gen: CylindGen = Circle(base[1]) if n == 1 else CylindN(base[1:])
 
     def pop(self) -> List[float]:
         """Generates a new point on the n-cylinder.
@@ -53,8 +53,8 @@ class CylindN(CylindGen):
         Returns:
             List[float]: A new point on the n-cylinder.
         """
-        cosphi = 2.0 * self.vdc.pop() - 1.0  # map to [-1, 1]
-        sinphi = math.sqrt(1.0 - cosphi * cosphi)
+        cosphi: float = 2.0 * self.vdc.pop() - 1.0  # map to [-1, 1]
+        sinphi: float = math.sqrt(1.0 - cosphi * cosphi)
         return [xi * sinphi for xi in self.c_gen.pop()] + [cosphi]
 
     def reseed(self, seed: int) -> None:
