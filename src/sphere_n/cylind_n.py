@@ -1,4 +1,37 @@
-"""Generates points on n-dimensional spheres using cylindrical mapping."""
+"""Generates points on n-dimensional spheres using cylindrical mapping.
+
+.. svgbob::
+   :align: center
+
+   Cylindrical Mapping:
+   
+   +------------------+
+   |      ^           |
+   |      | z         |
+   |      |           |
+   |   ___|___        |
+   |  /       \       |
+   | |         |      |----> Sphere(n)
+   |  \_______/       |
+   |      |           |
+   |      |           |
+   |      v           |
+   +------------------+
+
+Algorithm:
+
+.. svgbob::
+   :align: center
+
+           VdCorput Sequence
+                  |
+                  v
+   [-1,1] <-----------------> Sphere(n)
+       cosφ    Cylindrical
+              Mapping & 
+              Normalization
+
+"""
 
 import math
 from abc import ABC, abstractmethod

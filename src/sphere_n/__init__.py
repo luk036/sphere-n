@@ -1,3 +1,28 @@
+"""sphere-n package for generating low-discrepancy sequences on n-dimensional spheres.
+
+.. svgbob::
+   :align: center
+
+   n-Sphere Visualization:
+   
+   +------------------+
+   |    S^n           |
+   |   +----------+   |
+   |  /          /|   |
+   | +----------+ |   |
+   | |    O     | |   |
+   | |   / \    | |   |
+   | |  *   *   | |   |
+   | | *     *  | |   |
+   | |  *   *   | |   |
+   | |   * *    | |   |
+   | +----------+ |   |
+   |  \          \|   |
+   |   +----------+   |
+   +------------------+
+
+"""
+
 import sys
 
 if sys.version_info[:2] >= (3, 8):

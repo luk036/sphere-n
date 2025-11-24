@@ -1,9 +1,40 @@
-"""Generates points on n-dimensional spheres."""
+"""Generates points on n-dimensional spheres.
+
+.. svgbob::
+   :align: center
+
+   +-----------------------+
+   |        Sphere         |
+   |      O---------> x    |
+   |     /|                |
+   |    / |                |
+   |   /  |                |
+   |  /   |                |
+   | O----+-----> y        |
+   |  \\  |                 |
+   |   \\ |                 |
+   |    \\|                 |
+   |     * z               |
+   +-----------------------+
+
+Algorithm Overview:
+
+.. svgbob::
+   :align: center
+
+          VdCorput Sequence
+                 |
+                 v
+   [0,1] ------------------> [0,\u03c0] -----> Sphere(n)
+                    Mapping      Interpolation
+
+"""
 
 import math
 from abc import ABC, abstractmethod
 from functools import cache
 from typing import List, Union
+
 
 import numpy as np
 from lds_gen.lds import Sphere, VdCorput  # low-discrepancy sequence generators
