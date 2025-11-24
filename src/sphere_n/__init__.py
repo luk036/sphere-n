@@ -1,4 +1,4 @@
-"""sphere-n package for generating low-discrepancy sequences on n-dimensional spheres.
+r"""sphere-n package for generating low-discrepancy sequences on n-dimensional spheres.
 
 .. svgbob::
    :align: center

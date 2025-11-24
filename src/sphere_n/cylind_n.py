@@ -1,4 +1,4 @@
-"""Generates points on n-dimensional spheres using cylindrical mapping.
+r"""Generates points on n-dimensional spheres using cylindrical mapping.
 
 .. svgbob::
    :align: center

@@ -1,4 +1,4 @@
-"""Generates points on n-dimensional spheres.
+r"""Generates points on n-dimensional spheres.
 
 .. svgbob::
    :align: center
