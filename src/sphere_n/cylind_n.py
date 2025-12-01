@@ -4,7 +4,7 @@ r"""Generates points on n-dimensional spheres using cylindrical mapping.
    :align: center
 
    Cylindrical Mapping:
-   
+
    +------------------+
    |      ^           |
    |      | z         |
@@ -28,7 +28,7 @@ Algorithm:
                   v
    [-1,1] <-----------------> Sphere(n)
        cosφ    Cylindrical
-              Mapping & 
+              Mapping &
               Normalization
 
 """

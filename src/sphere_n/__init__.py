@@ -4,7 +4,7 @@ r"""sphere-n package for generating low-discrepancy sequences on n-dimensional s
    :align: center
 
    n-Sphere Visualization:
-   
+
    +------------------+
    |    S^n           |
    |   +----------+   |
