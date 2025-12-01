@@ -3,7 +3,7 @@ from pytest import approx
 from sphere_n.sphere_n import Sphere3
 
 
-def test_sphere3():
+def test_sphere3() -> None:
     """assert that the sphere3hopf generator produces the correct values"""
     sgen = Sphere3([2, 3, 5])
     sgen.reseed(0)

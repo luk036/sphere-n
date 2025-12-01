@@ -53,6 +53,7 @@ distribution of points is needed.
 """
 
 import numpy as np
+from typing import Union
 from pytest import approx
 from scipy.spatial import ConvexHull
 
@@ -63,7 +64,7 @@ from sphere_n.sphere_n import SphereN
 
 # Write a function that returns a random point on the surface of a sphere
 # in n dimensions
-def random_point_on_sphere(n):
+def random_point_on_sphere(n: int) -> np.ndarray:
     # Generate a random point on the surface of a sphere in n dimensions
     # by generating a random vector and normalizing it
     x = np.random.randn(n)
@@ -71,7 +72,7 @@ def random_point_on_sphere(n):
     return x
 
 
-def run_random():
+def run_random() -> float:
     # reseed
     np.random.seed(1234)
     npoints = 600
@@ -81,7 +82,7 @@ def run_random():
     return discrep_2(triangles, Triples)
 
 
-def run_lds(spgen):
+def run_lds(spgen: Union[SphereN, CylindN]) -> float:
     npoints = 600
     Triples = np.array([spgen.pop() for _ in range(npoints)])
     hull = ConvexHull(Triples)
@@ -89,57 +90,57 @@ def run_lds(spgen):
     return discrep_2(triangles, Triples)
 
 
-def test_random():
+def test_random() -> None:
     measure = run_random()
     assert measure == approx(1.115508637826039)
 
 
-def test_sphere_n():
+def test_sphere_n() -> None:
     spgen = SphereN([2, 3, 5, 7])
     spgen.reseed(0)
     measure = run_lds(spgen)
     assert measure == approx(0.9125914)
 
 
-def test_cylin_n():
+def test_cylin_n() -> None:
     cygen = CylindN([2, 3, 5, 7])
     cygen.reseed(0)
     measure = run_lds(cygen)
     assert measure == approx(1.0505837105828988)
 
 
-def test_cylind_n_dimension():
+def test_cylind_n_dimension() -> None:
     cgen = CylindN([2, 3, 5, 7])
     vec = cgen.pop()
     assert len(vec) == 5
 
 
-def test_cylind_n_normalization():
+def test_cylind_n_normalization() -> None:
     cgen = CylindN([2, 3, 5, 7])
     vec = cgen.pop()
     assert np.linalg.norm(vec) == approx(1.0)
 
 
-def test_discrep_2():
+def test_discrep_2() -> None:
     K = np.array([[0, 1, 2]])
     X = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
     result = discrep_2(K, X)
     assert isinstance(result, float)
 
 
-def test_sphere_n_dimension():
+def test_sphere_n_dimension() -> None:
     sgen = SphereN([2, 3, 5, 7])
     vec = sgen.pop()
     assert len(vec) == 5
 
 
-def test_sphere_n_normalization():
+def test_sphere_n_normalization() -> None:
     sgen = SphereN([2, 3, 5, 7])
     vec = sgen.pop()
     assert np.linalg.norm(vec) == approx(1.0)
 
 
-def test_sphere_n_reseed():
+def test_sphere_n_reseed() -> None:
     sgen = SphereN([2, 3, 5, 7])
     sgen.reseed(0)
     vec1 = sgen.pop()

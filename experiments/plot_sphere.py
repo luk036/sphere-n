@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 import numpy as np
 from lds_gen.lds import Sphere
+from typing import Any
 
 # Luk ???
 # from mpl_toolkits.mplot3d import Axes3D
@@ -10,24 +11,24 @@ from scipy.spatial import ConvexHull
 from sphere_n.discrep_2 import discrep_2
 
 
-def average_g(triples):
+def average_g(triples: np.ndarray) -> float:
     return np.mean([triple[2] for triple in triples])
 
 
-def sample_spherical(npoints, ndim=3):
+def sample_spherical(npoints: int, ndim: int = 3) -> np.ndarray:
     vec = np.random.randn(ndim, npoints)
     vec /= np.linalg.norm(vec, axis=0)
     return vec.transpose()
 
 
-def my_plot(Triples, ax):
+def my_plot(Triples: np.ndarray, ax: Any) -> None:
     hull = ConvexHull(Triples)
     triangles = hull.simplices
     measure = discrep_2(triangles, Triples)
     print(measure)
 
     colors = np.array(
-        [average_g([Triples[idx] for idx in triangle]) for triangle in triangles]
+        [average_g(np.array([Triples[idx] for idx in triangle])) for triangle in triangles]
     )
 
     X = Triples[:, 0]
@@ -44,22 +45,27 @@ def my_plot(Triples, ax):
     collec.autoscale()
 
 
-# Triples = np.array(list(zip(X, Y, Z)))
-npoints = 600
+def main() -> None:
+    # Triples = np.array(list(zip(X, Y, Z)))
+    npoints = 600
 
-fig = plt.figure()
-ax1 = fig.add_subplot(121, projection="3d")
-ax2 = fig.add_subplot(122, projection="3d")
+    fig = plt.figure()
+    ax1 = fig.add_subplot(121, projection="3d")
+    ax2 = fig.add_subplot(122, projection="3d")
 
-sgen = Sphere([2, 3])
-# points = [sgen.pop() for _ in range(npoints)]
-Triples = np.array([sgen.pop() for _ in range(npoints)])
-# Triples = np.array([p for p in sphere(npoints, [2, 3, 5])])
-my_plot(Triples, ax1)
-Triples = sample_spherical(npoints)
-my_plot(Triples, ax2)
-plt.show()
+    sgen = Sphere([2, 3])
+    # points = [sgen.pop() for _ in range(npoints)]
+    Triples = np.array([sgen.pop() for _ in range(npoints)])
+    # Triples = np.array([p for p in sphere(npoints, [2, 3, 5])])
+    my_plot(Triples, ax1)
+    Triples = sample_spherical(npoints)
+    my_plot(Triples, ax2)
+    plt.show()
 
-# plt.plot(points[:,0], points[:,1], 'o')
-# plt.plot(points[hull.vertices,0], points[hull.vertices,1], 'r--', lw=2)
-# plt.show()
+    # plt.plot(points[:,0], points[:,1], 'o')
+    # plt.plot(points[hull.vertices,0], points[hull.vertices,1], 'r--', lw=2)
+    # plt.show()
+
+
+if __name__ == "__main__":
+    main()

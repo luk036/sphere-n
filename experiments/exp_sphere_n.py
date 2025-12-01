@@ -50,42 +50,47 @@ from sphere_n.sphere_n import SphereN
 # import matplotlib.pylab as lab
 
 
-def sample_spherical(npoints, ndim=3):
+def sample_spherical(npoints: int, ndim: int = 3) -> np.ndarray:
     vec = np.random.randn(ndim, npoints)
     vec /= np.linalg.norm(vec, axis=0)
     return vec.transpose()
 
 
-def dispersion(Triples):
+def dispersion(Triples: np.ndarray) -> float:
     hull = ConvexHull(Triples)
     triangles = hull.simplices
     measure = discrep_2(triangles, Triples)
     return measure
 
 
-npoints = 2001
-n = 4
-b = PRIME_TABLE[: n - 1]
-Triples_r = sample_spherical(npoints, n)
-spgen = SphereN(b)
-cygen = CylindN(b)
-Triples_s = np.array([spgen.pop() for _ in range(npoints)])
-Triples_c = np.array([cygen.pop() for _ in range(npoints)])
+def main() -> None:
+    npoints = 2001
+    n = 4
+    b = PRIME_TABLE[: n - 1]
+    Triples_r = sample_spherical(npoints, n)
+    spgen = SphereN(b)
+    cygen = CylindN(b)
+    Triples_s = np.array([spgen.pop() for _ in range(npoints)])
+    Triples_c = np.array([cygen.pop() for _ in range(npoints)])
 
-x = list(range(100, npoints, 100))
-res_r = []
-res_s = []
-res_c = []
+    x = list(range(100, npoints, 100))
+    res_r = []
+    res_s = []
+    res_c = []
 
-for i in x:
-    res_r += [dispersion(Triples_r[:i, :])]
-    res_s += [dispersion(Triples_s[:i, :])]
-    res_c += [dispersion(Triples_c[:i, :])]
+    for i in x:
+        res_r += [dispersion(Triples_r[:i, :])]
+        res_s += [dispersion(Triples_s[:i, :])]
+        res_c += [dispersion(Triples_c[:i, :])]
 
-plt.plot(x, res_r, "r", label="Random")
-plt.plot(x, res_s, "g", label="Our")
-plt.plot(x, res_c, "b", label="Cylin")
-plt.legend(loc="best")
-plt.xlabel("#points")
-plt.ylabel("dispersion")
-plt.show()
+    plt.plot(x, res_r, "r", label="Random")
+    plt.plot(x, res_s, "g", label="Our")
+    plt.plot(x, res_c, "b", label="Cylin")
+    plt.legend(loc="best")
+    plt.xlabel("#points")
+    plt.ylabel("dispersion")
+    plt.show()
+
+
+if __name__ == "__main__":
+    main()
