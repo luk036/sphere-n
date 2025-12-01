@@ -1,13 +1,15 @@
 import numpy as np
 from typing import Union
 import numpy.typing as npt
+from numpy.typing import NDArray
+from typing import Any
 
 
-def discrep_2(K: npt.NDArray[np.int_], X: npt.NDArray[np.float64]) -> float:
+def discrep_2(K: NDArray[Any], X: npt.NDArray[np.float64]) -> float:
     """dispersion measure
 
     Arguments:
-        K (NDArray[np.int_]): Array representing indices
+        K (NDArray[Any]): Array representing indices
         X (NDArray[np.float64]): Array representing points
 
     Returns:
