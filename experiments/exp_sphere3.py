@@ -3,6 +3,7 @@ from __future__ import print_function
 import matplotlib.pyplot as plt
 import numpy as np
 from lds_gen.lds import Sphere3Hopf
+from rich.progress import Progress, track
 from scipy.spatial import ConvexHull
 
 from sphere_n.discrep_2 import discrep_2
@@ -38,7 +39,7 @@ def main() -> None:
     res_h = []
     res_s = []
 
-    for i in x:
+    for i in track(x, description="Calculating dispersion"):
         res_r += [dispersion(Triples_r[:i, :])]
         res_h += [dispersion(Triples_h[:i, :])]
         res_s += [dispersion(Triples_s[:i, :])]

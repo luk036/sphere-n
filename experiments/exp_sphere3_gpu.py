@@ -3,10 +3,9 @@ from __future__ import print_function
 import matplotlib.pyplot as plt
 import numpy as np
 from lds_gen.lds import Sphere3Hopf
+from rich.progress import track
 from scipy.spatial import ConvexHull
 from numba import cuda
-import math
-import time
 
 from sphere_n.discrep_2 import discrep_2
 from sphere_n.sphere_n import Sphere3
@@ -66,7 +65,7 @@ def dispersion_gpu(Triples: np.ndarray) -> float:
     threads_per_block = 256
     blocks_per_grid = (nsimplex + (threads_per_block - 1)) // threads_per_block
 
-    discrep_2_kernel[blocks_per_grid, threads_per_block](
+    discrep_2_kernel[blocks_per_grid, threads_per_block]( # type: ignore
         d_K, d_X, d_max_q_vals, d_min_q_vals
     )
 
@@ -102,33 +101,27 @@ def main() -> None:
     res_s = []
     res_s_gpu = []
 
-    if cuda.is_available():
+    use_gpu = cuda.is_available()
+    if use_gpu:
         print("CUDA device found, running GPU version")
-        for i in x:
-            start_time = time.time()
+        for i in track(x, description="Calculating dispersion (GPU)"):
             res_s_gpu += [dispersion_gpu(Triples_s[:i, :])]
-            print(f"GPU for {i} points: {time.time() - start_time:.4f}s")
-            
-            # Optionally run CPU version for comparison
-            start_time = time.time()
-            res_s += [dispersion(Triples_s[:i, :])]
-            print(f"CPU for {i} points: {time.time() - start_time:.4f}s")
-
             res_r += [dispersion(Triples_r[:i, :])]
             res_h += [dispersion(Triples_h[:i, :])]
             
-        plt.plot(x, res_s_gpu, "y", label="Our (GPU)")
-
     else:
         print("No CUDA device found, running CPU version only")
-        for i in x:
+        for i in track(x, description="Calculating dispersion (CPU)"):
+            res_s += [dispersion(Triples_s[:i, :])]
             res_r += [dispersion(Triples_r[:i, :])]
             res_h += [dispersion(Triples_h[:i, :])]
-            res_s += [dispersion(Triples_s[:i, :])]
 
     plt.plot(x, res_r, "r", label="Random")
     plt.plot(x, res_h, "b", label="Hopf")
-    plt.plot(x, res_s, "g", label="Our (CPU)")
+    if use_gpu:
+        plt.plot(x, res_s_gpu, "y", label="Our (GPU)")
+    else:
+        plt.plot(x, res_s, "g", label="Our (CPU)")
     plt.legend(loc="best")
     plt.xlabel("#points")
     plt.ylabel("dispersion")

@@ -11,6 +11,7 @@ from __future__ import print_function
 import matplotlib.pyplot as plt
 import numpy as np
 from lds_gen.lds import PRIME_TABLE
+from rich.progress import track
 from scipy.spatial import ConvexHull
 from numba import cuda
 # import time
@@ -19,7 +20,7 @@ from sphere_n.cylind_n import CylindN
 from sphere_n.discrep_2 import discrep_2
 from sphere_n.sphere_n import SphereN
 
-def sample_spherical(npoints: int, ndim: int = 3) -> np.ndarray:
+def sample_spherical(npoints: int, ndim: int) -> np.ndarray:
     vec = np.random.randn(ndim, npoints)
     vec /= np.linalg.norm(vec, axis=0)
     return vec.transpose()
@@ -66,7 +67,7 @@ def dispersion_gpu(Triples: np.ndarray) -> float:
     threads_per_block = 256
     blocks_per_grid = (nsimplex + (threads_per_block - 1)) // threads_per_block
 
-    discrep_2_kernel[blocks_per_grid, threads_per_block](
+    discrep_2_kernel[blocks_per_grid, threads_per_block]( # type: ignore
         d_K, d_X, d_max_q_vals, d_min_q_vals
     )
 
@@ -97,7 +98,7 @@ def main() -> None:
     Triples_s = np.array([spgen.pop() for _ in range(npoints)])
     Triples_c = np.array([cygen.pop() for _ in range(npoints)])
 
-    x = list(range(100, npoints, 100))
+    x = list(range(200, npoints, 100))
     res_r = []
     res_s = []
     res_c = []
@@ -109,28 +110,22 @@ def main() -> None:
     else:
         print("No CUDA device found, running CPU versions only")
 
-    for i in x:
+    for i in track(x, description="Calculating dispersion"):
         res_r += [dispersion(Triples_r[:i, :])]
         res_c += [dispersion(Triples_c[:i, :])]
 
         if use_gpu:
-            # start_time = time.time()
             res_s_gpu += [dispersion_gpu(Triples_s[:i, :])]
-            # gpu_time = time.time() - start_time
-            
-            # start_time = time.time()
-            # res_s += [dispersion(Triples_s[:i, :])]
-            # cpu_time = time.time() - start_time
-            # print(f"Points: {i}, CPU time: {cpu_time:.4f}s, GPU time: {gpu_time:.4f}s")
         else:
             res_s += [dispersion(Triples_s[:i, :])]
 
 
     plt.plot(x, res_r, "r", label="Random")
     plt.plot(x, res_c, "b", label="Cylin")
-    plt.plot(x, res_s, "g", label="Our (CPU)")
     if use_gpu:
         plt.plot(x, res_s_gpu, "y", label="Our (GPU)")
+    else:
+        plt.plot(x, res_s, "g", label="Our (CPU)")
 
     plt.legend(loc="best")
     plt.xlabel("#points")

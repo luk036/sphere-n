@@ -41,6 +41,7 @@ from __future__ import print_function
 import matplotlib.pyplot as plt
 import numpy as np
 from lds_gen.lds import PRIME_TABLE
+from rich.progress import track
 from scipy.spatial import ConvexHull
 
 from sphere_n.cylind_n import CylindN
@@ -78,7 +79,7 @@ def main() -> None:
     res_s = []
     res_c = []
 
-    for i in x:
+    for i in track(x, description="Calculating dispersion"):
         res_r += [dispersion(Triples_r[:i, :])]
         res_s += [dispersion(Triples_s[:i, :])]
         res_c += [dispersion(Triples_c[:i, :])]
