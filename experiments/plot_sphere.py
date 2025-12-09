@@ -28,7 +28,10 @@ def my_plot(Triples: np.ndarray, ax: Any) -> None:
     print(measure)
 
     colors = np.array(
-        [average_g(np.array([Triples[idx] for idx in triangle])) for triangle in triangles]
+        [
+            average_g(np.array([Triples[idx] for idx in triangle]))
+            for triangle in triangles
+        ]
     )
 
     X = Triples[:, 0]

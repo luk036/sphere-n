@@ -78,7 +78,9 @@ class CylindN(CylindGen):
         n = len(base) - 1
         assert n >= 1
         self.vdc: VdCorput = VdCorput(base[0])
-        self.c_gen: Union[Circle, CylindN] = Circle(base[1]) if n == 1 else CylindN(base[1:])
+        self.c_gen: Union[Circle, CylindN] = (
+            Circle(base[1]) if n == 1 else CylindN(base[1:])
+        )
 
     def pop(self) -> List[float]:
         """Generates a new point on the n-cylinder.

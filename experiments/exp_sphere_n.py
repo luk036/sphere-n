@@ -66,7 +66,7 @@ def dispersion(Triples: np.ndarray) -> float:
 
 def main() -> None:
     npoints = 2001
-    n = 4
+    n = 5
     b = PRIME_TABLE[: n - 1]
     Triples_r = sample_spherical(npoints, n)
     spgen = SphereN(b)
@@ -74,7 +74,7 @@ def main() -> None:
     Triples_s = np.array([spgen.pop() for _ in range(npoints)])
     Triples_c = np.array([cygen.pop() for _ in range(npoints)])
 
-    x = list(range(100, npoints, 100))
+    x = list(range(200, npoints, 100))
     res_r = []
     res_s = []
     res_c = []

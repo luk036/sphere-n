@@ -65,7 +65,7 @@ def dispersion_gpu(Triples: np.ndarray) -> float:
     threads_per_block = 256
     blocks_per_grid = (nsimplex + (threads_per_block - 1)) // threads_per_block
 
-    discrep_2_kernel[blocks_per_grid, threads_per_block]( # type: ignore
+    discrep_2_kernel[blocks_per_grid, threads_per_block](  # type: ignore
         d_K, d_X, d_max_q_vals, d_min_q_vals
     )
 
@@ -95,7 +95,7 @@ def main() -> None:
     Triples_h = np.array([sphopfgen.pop() for _ in range(npoints)])
     Triples_s = np.array([spgen.pop() for _ in range(npoints)])
 
-    x = list(range(100, npoints, 100))
+    x = list(range(200, npoints, 100))
     res_r = []
     res_h = []
     res_s = []
@@ -108,7 +108,7 @@ def main() -> None:
             res_s_gpu += [dispersion_gpu(Triples_s[:i, :])]
             res_r += [dispersion(Triples_r[:i, :])]
             res_h += [dispersion(Triples_h[:i, :])]
-            
+
     else:
         print("No CUDA device found, running CPU version only")
         for i in track(x, description="Calculating dispersion (CPU)"):

@@ -3,7 +3,7 @@ from __future__ import print_function
 import matplotlib.pyplot as plt
 import numpy as np
 from lds_gen.lds import Sphere3Hopf
-from rich.progress import Progress, track
+from rich.progress import track
 from scipy.spatial import ConvexHull
 
 from sphere_n.discrep_2 import discrep_2
@@ -34,7 +34,7 @@ def main() -> None:
     Triples_h = np.array([sphopfgen.pop() for _ in range(npoints)])
     Triples_s = np.array([spgen.pop() for _ in range(npoints)])
 
-    x = list(range(100, npoints, 100))
+    x = list(range(200, npoints, 100))
     res_r = []
     res_h = []
     res_s = []

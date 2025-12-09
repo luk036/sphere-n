@@ -80,15 +80,17 @@ class InteractiveMandelbrot:
 
         # Connect Events
         self.fig.canvas.mpl_connect("scroll_event", self.on_scroll)
-        
+
         # Rectangle selector for drag-to-zoom
         self.selector = RectangleSelector(
-            self.ax, self.on_select,
+            self.ax,
+            self.on_select,
             useblit=True,
             button=[1],  # Left mouse button
-            minspanx=5, minspany=5,
-            spancoords='pixels',
-            interactive=True
+            minspanx=5,
+            minspany=5,
+            spancoords="pixels",
+            interactive=True,
         )
 
         print("Initial render...")
@@ -105,7 +107,8 @@ class InteractiveMandelbrot:
         y_height = self.y_max - self.y_min
         current_ratio = x_width / y_height
 
-        if y_height == 0: return # Avoid division by zero
+        if y_height == 0:
+            return  # Avoid division by zero
 
         if current_ratio > target_ratio:
             target_height = x_width / target_ratio
@@ -121,7 +124,7 @@ class InteractiveMandelbrot:
     def update_image(self):
         # Debounce rapid calls
         self.fig.canvas.toolbar.set_message("Rendering...")
-        
+
         d_image = cuda.to_device(self.image)
 
         blockspergrid_x = int(math.ceil(WIDTH / THREADS_PER_BLOCK[0]))
@@ -139,7 +142,6 @@ class InteractiveMandelbrot:
         self.im.set_extent((self.x_min, self.x_max, self.y_min, self.y_max))
         self.fig.canvas.draw_idle()
         self.fig.canvas.toolbar.set_message("")
-
 
     def on_select(self, eclick, erelease):
         """Callback for rectangle selection (drag-to-zoom)."""
@@ -161,13 +163,15 @@ class InteractiveMandelbrot:
         """Callback for mouse wheel zoom."""
         if event.inaxes != self.ax:
             return
-        
+
         mouse_x, mouse_y = event.xdata, event.ydata
-        if mouse_x is None or mouse_y is None: # Ignore scroll events outside the plot area
-            return 
+        if (
+            mouse_x is None or mouse_y is None
+        ):  # Ignore scroll events outside the plot area
+            return
 
         scale_factor = 0.8 if event.button == "up" else 1.25
-        
+
         x_width = (self.x_max - self.x_min) * scale_factor
         y_height = (self.y_max - self.y_min) * scale_factor
 

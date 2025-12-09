@@ -20,6 +20,7 @@ from sphere_n.cylind_n import CylindN
 from sphere_n.discrep_2 import discrep_2
 from sphere_n.sphere_n import SphereN
 
+
 def sample_spherical(npoints: int, ndim: int) -> np.ndarray:
     vec = np.random.randn(ndim, npoints)
     vec /= np.linalg.norm(vec, axis=0)
@@ -67,7 +68,7 @@ def dispersion_gpu(Triples: np.ndarray) -> float:
     threads_per_block = 256
     blocks_per_grid = (nsimplex + (threads_per_block - 1)) // threads_per_block
 
-    discrep_2_kernel[blocks_per_grid, threads_per_block]( # type: ignore
+    discrep_2_kernel[blocks_per_grid, threads_per_block](  # type: ignore
         d_K, d_X, d_max_q_vals, d_min_q_vals
     )
 
@@ -90,7 +91,7 @@ def dispersion(Triples: np.ndarray) -> float:
 
 def main() -> None:
     npoints = 2001
-    n = 6
+    n = 5
     b = PRIME_TABLE[: n - 1]
     Triples_r = sample_spherical(npoints, n)
     spgen = SphereN(b)
@@ -118,7 +119,6 @@ def main() -> None:
             res_s_gpu += [dispersion_gpu(Triples_s[:i, :])]
         else:
             res_s += [dispersion(Triples_s[:i, :])]
-
 
     plt.plot(x, res_r, "r", label="Random")
     plt.plot(x, res_c, "b", label="Cylin")
