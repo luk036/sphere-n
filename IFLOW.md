@@ -93,7 +93,7 @@ for _ in range(1):
 
 ## 开发约定
 
-- 项目使用 Python 3.10+ 
+- 项目使用 Python 3.10+
 - 遵循 PEP 8 代码风格（通过 flake8 检查）
 - 使用类型提示
 - 包含 doctest 示例
