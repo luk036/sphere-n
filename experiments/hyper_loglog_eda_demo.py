@@ -3,8 +3,7 @@ HyperLogLog Applications in Electronic Design Automation (EDA)
 """
 
 import numpy as np
-from typing import List, Dict, Set, Tuple
-import hashlib
+from typing import Dict
 import matplotlib.pyplot as plt
 from dataclasses import dataclass
 import random
@@ -128,7 +127,7 @@ class EDAApplicationSuite:
         estimate = hll._estimate_cardinality()
         actual = len(actual_violations)
 
-        print(f"\nDRC Violation Pattern Analysis:")
+        print("\nDRC Violation Pattern Analysis:")
         print(f"  Estimated unique violation patterns: {estimate:,.0f}")
         print(f"  Actual unique patterns: {actual:,}")
         print(f"  Error: {abs(estimate - actual) / actual * 100:.2f}%")
@@ -138,7 +137,7 @@ class EDAApplicationSuite:
         hll_memory = hll.m * 4
         naive_memory = actual * (len(violation_types[0]) + len(layers[0]) + 20)
 
-        print(f"\nMemory Comparison:")
+        print("\nMemory Comparison:")
         print(f"  HLL memory: {hll_memory / 1024:.1f} KB")
         print(f"  Naive storage: {naive_memory / (1024 * 1024):.1f} MB")
         print(f"  Memory reduction: {naive_memory / hll_memory:.0f}x")
@@ -164,7 +163,7 @@ class EDAApplicationSuite:
         num_gates = self.config.num_gates
         num_nets = self.config.num_nets
 
-        print(f"Analyzing netlist with:")
+        print("Analyzing netlist with:")
         print(f"  Gates: {num_gates:,}")
         print(f"  Nets: {num_nets:,}")
 
@@ -201,7 +200,7 @@ class EDAApplicationSuite:
             # Identify potential critical paths (long chains)
             if len(connected_gates) > 10:
                 # Create critical path signature
-                critical_signature = (
+                (
                     len(connected_gates),
                     hash(tuple(connected_gates[:3])),
                 )
@@ -215,7 +214,7 @@ class EDAApplicationSuite:
                 )
 
         # Results
-        print(f"\nConnectivity Analysis Results:")
+        print("\nConnectivity Analysis Results:")
         print(
             f"  Estimated unique signal paths: {hll_paths._estimate_cardinality():,.0f}"
         )
@@ -323,7 +322,7 @@ class EDAApplicationSuite:
         total_estimate = sum(estimates)
         total_actual = sum(actuals)
 
-        print(f"\nCongestion Estimation Results:")
+        print("\nCongestion Estimation Results:")
         print(
             f"  Estimated unique cell types across all regions: {total_estimate:,.0f}"
         )
@@ -428,7 +427,7 @@ class EDAApplicationSuite:
                 critical_paths.add(critical_signature)
 
         # Results
-        print(f"\nTiming Path Analysis:")
+        print("\nTiming Path Analysis:")
         print(
             f"  Estimated unique timing paths: {hll_paths._estimate_cardinality():,.0f}"
         )
@@ -532,7 +531,7 @@ class EDAApplicationSuite:
             transition_counts.add(transition_signature)
 
         # Results
-        print(f"\nPower Activity Analysis:")
+        print("\nPower Activity Analysis:")
         print(
             f"  Estimated unique activity patterns: {hll_patterns._estimate_cardinality():,.0f}"
         )
@@ -636,7 +635,7 @@ class EDAApplicationSuite:
             current_state = next_state
 
         # Results
-        print(f"\nVerification Coverage Results:")
+        print("\nVerification Coverage Results:")
         print(
             f"  Estimated unique states covered: {hll_states._estimate_cardinality():,.0f}"
         )
@@ -737,7 +736,7 @@ class EDAApplicationSuite:
                 failing_die_signatures.add(failing_signature)
 
         # Results
-        print(f"\nYield Analysis Results:")
+        print("\nYield Analysis Results:")
         print(
             f"  Estimated unique defect patterns: {hll_defect_patterns._estimate_cardinality():,.0f}"
         )

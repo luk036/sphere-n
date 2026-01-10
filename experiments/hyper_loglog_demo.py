@@ -215,8 +215,8 @@ def test_hyperloglog():
 
     error = abs(estimated_total - actual_total) / actual_total * 100
 
-    print(f"Set 1 size: 5000")
-    print(f"Set 2 size: 5000")
+    print("Set 1 size: 5000")
+    print("Set 2 size: 5000")
     print(f"Actual union size: {actual_total}")
     print(f"Estimated union size after merge: {estimated_total:.2f}")
     print(f"Error: {error:.2f}%")
@@ -354,6 +354,6 @@ if __name__ == "__main__":
 
     estimated = hll.count()
     print(f"Estimated distinct numbers: {estimated:,.0f}")
-    print(f"Expected distinct numbers: ~100,000")
+    print("Expected distinct numbers: ~100,000")
     print(f"Memory used: ~{len(hll.registers) * 6 / 8:,.0f} bytes")
     print(f"That's {(len(hll.registers) * 6 / 8) / 1024:.2f} KB for 1M items!")

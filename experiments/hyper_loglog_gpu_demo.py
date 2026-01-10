@@ -4,7 +4,7 @@ No PyTorch dependency - pure Python with direct CUDA access
 """
 
 import numpy as np
-from numba import cuda, uint64, int32, float32
+from numba import cuda
 import time
 import random
 from typing import List, Any
@@ -40,7 +40,7 @@ class MurmurHash3:
         # Body
         for i in range(nblocks):
             k1 = np.uint64(int.from_bytes(key[i * 8 : (i + 1) * 8], "little"))
-            k2 = np.uint64(0)
+            np.uint64(0)
 
             k1 *= c1
             k1 = (k1 << 31) | (k1 >> 33)  # ROTL64(k1, 31)
@@ -54,7 +54,7 @@ class MurmurHash3:
         # Tail
         tail = key[nblocks * 8 :]
         k1 = np.uint64(0)
-        k2 = np.uint64(0)
+        np.uint64(0)
 
         if len(tail) >= 7:
             k1 ^= np.uint64(tail[6]) << 48
@@ -168,7 +168,7 @@ class GPUHyperLogLog:
         self.registers_gpu = cuda.device_array(self.m, dtype=np.int32)
         self._reset_registers()
 
-        print(f"GPU HyperLogLog Initialized:")
+        print("GPU HyperLogLog Initialized:")
         print(f"  Precision p={self.config.p}, registers m={self.m}")
         print(f"  Registers on GPU: {self.registers_gpu.size} elements")
         print(f"  Memory: {self.m * 4 / 1024:.2f} KB")
@@ -446,13 +446,13 @@ def benchmark_comparison():
         gpu_error = abs(gpu_estimate - unique_items) / unique_items * 100
         cpu_error = abs(cpu_estimate - unique_items) / unique_items * 100
 
-        print(f"GPU Results:")
+        print("GPU Results:")
         print(f"  Time: {gpu_time:.3f} seconds")
         print(f"  Estimate: {gpu_estimate:,.0f}")
         print(f"  Error: {gpu_error:.2f}%")
         print(f"  Throughput: {total_items / gpu_time / 1e6:.2f} M items/sec")
 
-        print(f"\nCPU Results:")
+        print("\nCPU Results:")
         print(f"  Time: {cpu_time:.3f} seconds")
         print(f"  Estimate: {cpu_estimate:,.0f}")
         print(f"  Error: {cpu_error:.2f}%")
@@ -854,7 +854,7 @@ if __name__ == "__main__":
 
     # Check CUDA availability
     if cuda.is_available():
-        print(f"✅ CUDA is available!")
+        print("✅ CUDA is available!")
         gpu_info = cuda.get_current_device()
         print(
             f"GPU Device: {gpu_info.name.decode() if hasattr(gpu_info.name, 'decode') else gpu_info.name}"

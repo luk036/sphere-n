@@ -26,7 +26,7 @@ def tuned_hll_kernel(data, registers, b):
         idx = x >> (uint64(64) - m_bits)
 
         # 3. Leading Zeros on the remaining 64-b bits
-        w = (x << m_bits) | (uint64(1) << (m_bits - uint64(1)))  # Ensure non-zero
+        (x << m_bits) | (uint64(1) << (m_bits - uint64(1)))  # Ensure non-zero
 
         # Count leading zeros using a fast bit-counting approach
         count = uint64(1)
