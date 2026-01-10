@@ -1,9 +1,10 @@
-import numpy as np
+import math
+
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.widgets import RectangleSelector
 from numba import cuda
-import math
 
 # --- Configuration ---
 WIDTH, HEIGHT = 1200, 800

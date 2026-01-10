@@ -35,7 +35,6 @@ from abc import ABC, abstractmethod
 from functools import cache
 from typing import List, Union
 
-
 import numpy as np
 from lds_gen.lds import Sphere, VdCorput  # low-discrepancy sequence generators
 

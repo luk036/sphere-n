@@ -3,9 +3,9 @@ from __future__ import print_function
 import matplotlib.pyplot as plt
 import numpy as np
 from lds_gen.lds import Sphere3Hopf
+from numba import cuda
 from rich.progress import track
 from scipy.spatial import ConvexHull
-from numba import cuda
 
 from sphere_n.discrep_2 import discrep_2
 from sphere_n.sphere_n import Sphere3

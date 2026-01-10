@@ -1,8 +1,9 @@
+from typing import Any
+
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 import numpy as np
 from lds_gen.lds import Sphere
-from typing import Any
 
 # Luk ???
 # from mpl_toolkits.mplot3d import Axes3D

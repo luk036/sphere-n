@@ -1,7 +1,8 @@
+from typing import Any
+
 import numpy as np
 import numpy.typing as npt
 from numpy.typing import NDArray
-from typing import Any
 
 
 def discrep_2(K: NDArray[Any], X: npt.NDArray[np.float64]) -> float:

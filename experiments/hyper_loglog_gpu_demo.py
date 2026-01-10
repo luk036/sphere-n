@@ -3,13 +3,14 @@ GPU-Accelerated HyperLogLog using Numba CUDA
 No PyTorch dependency - pure Python with direct CUDA access
 """
 
+import random
+import time
+from dataclasses import dataclass
+from typing import Any, List
+
+import matplotlib.pyplot as plt
 import numpy as np
 from numba import cuda
-import time
-import random
-from typing import List, Any
-import matplotlib.pyplot as plt
-from dataclasses import dataclass
 
 
 @dataclass
@@ -773,10 +774,10 @@ def interactive_example():
     print("-" * 40)
 
     text = """
-    HyperLogLog is a probabilistic data structure used to estimate 
-    the cardinality of a set. It is particularly useful when dealing 
-    with very large datasets where storing all unique elements is 
-    impractical due to memory constraints. The algorithm provides 
+    HyperLogLog is a probabilistic data structure used to estimate
+    the cardinality of a set. It is particularly useful when dealing
+    with very large datasets where storing all unique elements is
+    impractical due to memory constraints. The algorithm provides
     an approximate count with a small, fixed memory footprint.
     """
 

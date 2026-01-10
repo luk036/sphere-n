@@ -52,8 +52,9 @@ crucial in various scientific and mathematical applications where uniform
 distribution of points is needed.
 """
 
-import numpy as np
 from typing import Union
+
+import numpy as np
 from pytest import approx
 from scipy.spatial import ConvexHull
 

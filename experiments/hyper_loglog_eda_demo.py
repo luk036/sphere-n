@@ -2,11 +2,12 @@
 HyperLogLog Applications in Electronic Design Automation (EDA)
 """
 
-import numpy as np
-from typing import Dict
-import matplotlib.pyplot as plt
-from dataclasses import dataclass
 import random
+from dataclasses import dataclass
+from typing import Dict
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 @dataclass
@@ -794,27 +795,27 @@ def run_all_eda_applications():
 
     summary = """
     Key Advantages of HyperLogLog in EDA:
-    
+
     1. MEMORY EFFICIENCY:
        - Fixed memory footprint (1-64KB) regardless of design size
        - Enables analysis of billion-gate designs on modest hardware
        - Parallel analysis of multiple metrics simultaneously
-    
+
     2. REAL-TIME ANALYSIS:
        - Single-pass algorithms suitable for streaming EDA data
        - Enables interactive analysis during design exploration
        - Continuous monitoring of design metrics
-    
+
     3. SCALABILITY:
        - Constant-time updates (O(1) per element)
        - Linear scaling with data size
        - Mergeable sketches for distributed/parallel processing
-    
+
     4. APPROXIMATION GUARANTEES:
        - Controlled error rates (typically 1-2%)
        - Error bounds known in advance
        - Suitable for statistical design analysis
-    
+
     5. INTEGRATION WITH EXISTING FLOWS:
        - Can augment existing EDA tools with probabilistic analytics
        - GPU acceleration possible for further speedup
@@ -829,27 +830,27 @@ def run_all_eda_applications():
 
     integration_ideas = """
     Integration with Commercial EDA Tools:
-    
+
     1. CADENCE INNOVUS/ICC2:
        - Real-time congestion estimation during placement
        - Dynamic routing resource utilization tracking
-    
+
     2. SYNOPSYS DESIGN COMPILER/IC COMPILER:
        - Netlist complexity estimation
        - Power domain activity analysis
-    
+
     3. MENTOR CALIBRE:
        - DRC violation pattern clustering
        - Manufacturing hotspot detection
-    
+
     4. ANSYS REDHAWK/SIGRITY:
        - Power grid activity pattern analysis
        - Signal integrity violation tracking
-    
+
     5. SYNOPSYS VCS/MENTOR QUESTA:
        - Verification coverage estimation
        - Functional state space exploration
-    
+
     6. MATLAB/Simulink for Analog:
        - Parameter space exploration
        - Monte Carlo simulation result aggregation
@@ -871,28 +872,28 @@ if __name__ == "__main__":
 
     practical_example = """
     Example: Integrating HLL into Place-and-Route Tool:
-    
+
     class EnhancedPlacementEngine:
         def __init__(self):
             # Initialize HLL for various metrics
             self.congestion_hll = EDAHyperLogLog(p=12)
             self.timing_hll = EDAHyperLogLog(p=13)
             self.power_hll = EDAHyperLogLog(p=12)
-            
+
         def place_cell(self, cell):
             # Update congestion estimate
             region = self._get_region(cell.x, cell.y)
             self.congestion_hll.add_region_element(region, cell)
-            
+
             # Update timing estimate
             for net in cell.nets:
                 path_signature = self._create_path_signature(net)
                 self.timing_hll.add_element("PATH", hash(path_signature))
-            
+
             # Update power estimate
             power_signature = self._create_power_signature(cell)
             self.power_hll.add_element("POWER", hash(power_signature))
-            
+
         def get_metrics(self):
             return {
                 'congestion_estimate': self.congestion_hll.count(),
@@ -900,7 +901,7 @@ if __name__ == "__main__":
                 'power_patterns_estimate': self.power_hll.count(),
                 'memory_used_kb': self._total_memory_kb()
             }
-    
+
     Benefits:
     - Real-time feedback during placement
     - Memory usage: < 50KB instead of GBs

@@ -1,6 +1,7 @@
+import math
+
 import numpy as np
 from numba import cuda, uint64
-import math
 
 
 # A more robust 64-bit hash (MurmurHash3-style mixer)
