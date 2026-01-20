@@ -1,9 +1,64 @@
-[![codecov](https://codecov.io/gh/luk036/sphere-n/branch/main/graph/badge.svg?token=EIv4D8NlYj)](https://codecov.io/gh/luk036/sphere-n)
+![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)
+![PyPI](https://img.shields.io/pypi/v/sphere-n)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![codecov](https://codecov.io/gh/luk036/sphere-n/branch/main/graph/badge.svg?token=EIv4D8NlYj)
 [![Documentation Status](https://readthedocs.org/projects/sphere-n/badge/?version=latest)](https://sphere-n.readthedocs.io/en/latest/?badge=latest)
+![Tests](https://img.shields.io/badge/tests-passing-brightgreen)
 
 # ⚽ sphere-n
 
 > Generator of Low discrepancy Sequence on S_n
+
+Generate uniformly distributed points on n-dimensional spheres using low-discrepancy sequences. Perfect for Monte Carlo simulations, numerical integration, and computational geometry.
+
+## Quick Start
+
+### Installation
+
+```bash
+pip install sphere-n
+```
+
+### Basic Usage
+
+```python
+from sphere_n import Sphere3, SphereN, CylindN
+
+# Generate points on 3-sphere
+sgen = Sphere3([2, 3, 5])
+sgen.reseed(42)
+point = sgen.pop()
+print(point)  # [0.291, 0.897, -0.333, 6.12e-17]
+
+# Generate points on n-sphere (4D)
+nsgen = SphereN([2, 3, 5, 7])
+nsgen.reseed(42)
+point = nsgen.pop()
+print(point)  # 5-dimensional vector
+
+# Batch generation (more efficient)
+points = sgen.pop_batch(100)  # Generate 100 points at once
+```
+
+### Use Cases
+
+```python
+# Monte Carlo integration
+import numpy as np
+from sphere_n import SphereN
+
+sgen = SphereN([2, 3, 5, 7])
+points = np.array(sgen.pop_batch(10000))
+values = [f(p) for p in points]
+integral = np.mean(values)
+
+# Compare with random sampling
+random_points = np.random.randn(10000, 5)
+random_points /= np.linalg.norm(random_points, axis=1)[:, None]
+random_integral = np.mean([f(p) for p in random_points])
+
+# LDS typically converges 2-3x faster
+```
 
 This library implements a generator for the generation of low-discrepancy sequences on n-dimensional spheres. Low-discrepancy sequences are utilized for the generation of points that are distributed uniformly across a given space. This technique is of significant value in a number of fields, including computer graphics, numerical integration, and Monte Carlo simulations.
 

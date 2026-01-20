@@ -1,8 +1,9 @@
-import numpy as np
 import random
 from collections import defaultdict
+from typing import Dict, List, Tuple
+
 import matplotlib.pyplot as plt
-from typing import List, Tuple, Dict
+import numpy as np
 
 
 class CountMinSketch:

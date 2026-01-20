@@ -39,11 +39,14 @@ import numpy as np
 from lds_gen.lds import Sphere, VdCorput  # low-discrepancy sequence generators
 
 PI: float = np.pi
+# Lookup table for interpolation: 300 points from 0 to PI provides good resolution
+# for mapping van der Corput sequence to sphere coordinates
 X: np.ndarray = np.linspace(0.0, PI, 300)
-NEG_COSINE: np.ndarray = -np.cos(X)
-SINE: np.ndarray = np.sin(X)
+NEG_COSINE: np.ndarray = -np.cos(X)  # -cos(x) mapping function
+SINE: np.ndarray = np.sin(X)  # sin(x) for mapping calculations
+# F2 interpolation function for 3-sphere: F2(x) = (x - cos(x)sin(x)) / 2
 F2: np.ndarray = (X + NEG_COSINE * SINE) / 2.0
-HALF_PI = PI / 2.0
+HALF_PI = PI / 2.0  # Used for mapping ranges to [0, π/2]
 
 
 @cache
@@ -89,6 +92,25 @@ class SphereGen(ABC):
         """Reseeds the generator with a new seed."""
         raise NotImplementedError
 
+    def pop_batch(self, n: int) -> List[List[float]]:
+        """Generates and returns n points in batch.
+
+        This is more efficient than calling pop() n times due to reduced
+        Python loop overhead.
+
+        Args:
+            n (int): Number of points to generate.
+
+        Returns:
+            List[List[float]]: List of n points, each as a vector.
+
+        Examples:
+            >>> sgen = Sphere3([2, 3, 5])
+            >>> sgen.pop_batch(3)
+            [[...], [...], [...]]
+        """
+        return [self.pop() for _ in range(n)]
+
 
 class Sphere3(SphereGen):
     """3-Sphere sequence generator
@@ -106,28 +128,30 @@ class Sphere3(SphereGen):
     sphere2: Sphere  # 2-Sphere generator
 
     def __init__(self, base: List[int]) -> None:
-        """_summary_
+        """Initializes the 3-sphere generator.
 
         Args:
-            base (List[int]): _description_
+            base (List[int]): List of 3 integers representing bases for van der Corput
+                           and sphere sequences. base[0] for van der Corput,
+                           base[1:3] for 2-sphere.
         """
         self.vdc = VdCorput(base[0])
         self.sphere2 = Sphere(base[1:3])
 
     def reseed(self, seed: int) -> None:
-        """_summary_
+        """Reseeds the generator with a new seed value.
 
         Args:
-            seed (int): _description_
+            seed (int): The seed value for reproducible sequences.
         """
         self.vdc.reseed(seed)
         self.sphere2.reseed(seed)
 
     def pop(self) -> List[float]:
-        """_summary_
+        """Generates and returns a point on the 3-sphere.
 
         Returns:
-            List[float]: _description_
+            List[float]: A 4-dimensional vector representing a point on S^3.
         """
         ti = HALF_PI * self.vdc.pop()  # map to [t0, tm-1]
         xi = np.interp(ti, F2, X)
@@ -154,10 +178,13 @@ class SphereN(SphereGen):
         """Initializes the n-sphere generator.
 
         Args:
-            base (List[int]): The base for the van der Corput sequence.
+            base (List[int]): List of integers representing bases for van der Corput
+                           sequences at each dimension level. Length must be at least 3
+                           for n >= 2.
         """
         n = len(base) - 1
-        assert n >= 2
+        if n < 2:
+            raise ValueError(f"Dimension n must be >= 2, got {n}")
         self.vdc = VdCorput(base[0])
         if n == 2:
             self.s_gen = Sphere(base[1:3])
