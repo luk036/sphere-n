@@ -10,10 +10,7 @@ import numpy as np
 
 
 def plot_2d_projection(
-    points: List[List[float]],
-    projection: str = "xy",
-    ax=None,
-    **kwargs
+    points: List[List[float]], projection: str = "xy", ax=None, **kwargs
 ) -> None:
     """Plot 2D projection of high-dimensional sphere points.
 
@@ -62,11 +59,7 @@ def plot_2d_projection(
         plt.show()
 
 
-def plot_3d_projection(
-    points: List[List[float]],
-    ax=None,
-    **kwargs
-) -> None:
+def plot_3d_projection(points: List[List[float]], ax=None, **kwargs) -> None:
     """Plot 3D projection of sphere points.
 
     Args:
@@ -117,7 +110,7 @@ def plot_distribution_comparison(
     lds_points: List[List[float]],
     random_points: List[List[float]],
     ax=None,
-    title: str = "LDS vs Random Distribution"
+    title: str = "LDS vs Random Distribution",
 ) -> None:
     """Compare point distribution between LDS and random sampling.
 
@@ -175,11 +168,7 @@ def plot_distribution_comparison(
 
 
 def animate_points(
-    generator,
-    n_points: int = 50,
-    interval: int = 100,
-    projection: str = "3d",
-    **kwargs
+    generator, n_points: int = 50, interval: int = 100, projection: str = "3d", **kwargs
 ) -> None:
     """Create animated visualization of point generation.
 
