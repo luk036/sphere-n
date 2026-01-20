@@ -99,7 +99,7 @@ class TemporalSwitchingAnalyzer:
         self.cycle_counter = 0
 
         # For periodicity detection
-        self.periodicity_buffer = defaultdict(list)
+        self.periodicity_buffer: Dict[int, List[int]] = defaultdict(list)
 
     def process_timestep(self, toggled_nodes: List[int]):
         """Process toggle events at a specific timestep"""
@@ -222,7 +222,7 @@ class CurrentEnvelopeEstimator:
         """
         self.transition_time = transition_time
         self.voltage = voltage
-        self.capacitance_map = {}
+        self.capacitance_map: Dict[int, float] = {}
 
         # CMS for tracking switching
         self.cms = CountMinSketch(width=1000, depth=5)

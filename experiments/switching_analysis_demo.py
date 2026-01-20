@@ -1,7 +1,7 @@
 import random
 import time
 from collections import defaultdict
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -68,7 +68,7 @@ class CountMinSketch:
             raise ValueError("Sketches must have same dimensions for merging")
 
         merged = CountMinSketch(self.width, self.depth)
-        merged.sketch = self.sketch + other.sketch
+        merged.sketch = self.sketch + other.sketch  # type: ignore[assignment]
         return merged
 
     def reset(self):
@@ -163,13 +163,13 @@ class SwitchingPowerAnalyzer:
         self.cms = CountMinSketch(width=self.width, depth=self.depth)
 
         # Store node properties
-        self.node_capacitances = {}
-        self.node_locations = {}
-        self.node_categories = {}
+        self.node_capacitances: Dict[int, float] = {}
+        self.node_locations: Dict[int, Tuple[float, float]] = {}
+        self.node_categories: Dict[int, str] = {}
 
         # For power calculation
         self.voltage = 1.0  # V
-        self.activity_history = defaultdict(list)
+        self.activity_history: Dict[int, List[float]] = defaultdict(list)
 
     def add_node(
         self,
@@ -440,7 +440,7 @@ class TemporalSwitchingAnalyzer:
         self.cycle_counter = 0
 
         # For periodicity detection
-        self.periodicity_buffer = defaultdict(list)
+        self.periodicity_buffer: Dict[int, List[int]] = defaultdict(list)
 
     def process_timestep(self, toggled_nodes: List[int]):
         """Process toggle events at a specific timestep"""
@@ -547,7 +547,7 @@ class TemporalSwitchingAnalyzer:
 
         # Sort by activity
         hot_windows.sort(key=lambda x: x[1], reverse=True)
-        return hot_windows
+        return hot_windows  # type: ignore[return-value]
 
 
 class CurrentEnvelopeEstimator:
@@ -563,7 +563,7 @@ class CurrentEnvelopeEstimator:
         """
         self.transition_time = transition_time
         self.voltage = voltage
-        self.capacitance_map = {}
+        self.capacitance_map: Dict[int, float] = {}
 
         # CMS for tracking switching
         self.cms = CountMinSketch(width=1000, depth=5)
@@ -650,7 +650,7 @@ class CurrentEnvelopeEstimator:
                 # Next event time (exponential distribution)
                 t += np.random.exponential(avg_interval_time)
 
-        return time_axis, current_envelope
+        return time_axis, current_envelope  # type: ignore[return-value]
 
 
 def demo_temporal_analysis():
@@ -879,7 +879,7 @@ class PatternDependentAnalyzer:
         ]
 
         # Node information
-        self.node_info = {}
+        self.node_info: Dict[int, Dict[str, Any]] = {}
 
     def simulate_pattern(self, pattern_id: int, toggles: List[Tuple[int, int]]):
         """Simulate switching for a specific pattern"""
@@ -926,9 +926,9 @@ class PatternDependentAnalyzer:
             }
 
             # Calculate sensitivity index
-            if sensitivity_metrics["avg_activity"] > 0:
+            if sensitivity_metrics["avg_activity"] > 0:  # type: ignore[operator]
                 sensitivity_metrics["sensitivity_index"] = (
-                    sensitivity_metrics["range"] / sensitivity_metrics["avg_activity"]
+                    sensitivity_metrics["range"] / sensitivity_metrics["avg_activity"]  # type: ignore[operator]
                 )
             else:
                 sensitivity_metrics["sensitivity_index"] = 0
@@ -1040,7 +1040,7 @@ class MultiCornerAnalyzer:
 
             # Get corner parameters
             params = self.corner_params.get(corner, {"voltage": 1.0})
-            voltage = params["voltage"]
+            voltage = float(params.get("voltage", 1.0))  # type: ignore[arg-type]
 
             # Estimate power (simplified)
             # Assuming capacitance = 1e-15F, frequency = 1GHz

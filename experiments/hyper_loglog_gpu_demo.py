@@ -6,7 +6,7 @@ No PyTorch dependency - pure Python with direct CUDA access
 import random
 import time
 from dataclasses import dataclass
-from typing import Any, List
+from typing import Any, List, Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -151,7 +151,7 @@ def hyperloglog_kernel(hashes, registers, p, hash_bits):
 class GPUHyperLogLog:
     """GPU-accelerated HyperLogLog using Numba CUDA."""
 
-    def __init__(self, config: HLLConfig = None):
+    def __init__(self, config: Optional[HLLConfig] = None):
         self.config = config or HLLConfig()
         self.m = 1 << self.config.p  # Number of registers: 2^p
 
@@ -222,7 +222,7 @@ class GPUHyperLogLog:
         # Step 5: Wait for kernel to complete
         cuda.synchronize()
 
-    def add_stream(self, data_stream, batch_size: int = None):
+    def add_stream(self, data_stream, batch_size: Optional[int] = None):
         """
         Process a stream of data in batches.
 

@@ -4,7 +4,7 @@ HyperLogLog Applications in Electronic Design Automation (EDA)
 
 import random
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -32,7 +32,7 @@ class EDAHyperLogLog:
         self.alpha = 0.7213 / (1 + 1.079 / self.m)
 
     def _hash_eda_element(
-        self, element_type: str, element_id: int, properties: Dict = None
+        self, element_type: str, element_id: int, properties: Optional[Dict] = None
     ) -> int:
         """Hash function for EDA elements."""
         key = f"{element_type}:{element_id}"
@@ -40,7 +40,9 @@ class EDAHyperLogLog:
             key += ":" + str(sorted(properties.items()))
         return hash(key) & ((1 << 64) - 1)
 
-    def add_element(self, element_type: str, element_id: int, properties: Dict = None):
+    def add_element(
+        self, element_type: str, element_id: int, properties: Optional[Dict] = None
+    ):
         """Add an EDA element to the sketch."""
         h = self._hash_eda_element(element_type, element_id, properties)
 

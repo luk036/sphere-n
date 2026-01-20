@@ -75,7 +75,6 @@ def plot_3d_projection(points: List[List[float]], ax=None, **kwargs) -> None:
     """
     try:
         import matplotlib.pyplot as plt
-        from mpl_toolkits.mplot3d import Axes3D
     except ImportError:
         raise ImportError(
             "matplotlib is required for 3D visualization. "
@@ -186,8 +185,8 @@ def animate_points(
         >>> animate_points(sgen, n_points=100)
     """
     try:
-        import matplotlib.pyplot as plt
         import matplotlib.animation as animation
+        import matplotlib.pyplot as plt
     except ImportError:
         raise ImportError(
             "matplotlib is required for animation. "
@@ -209,6 +208,7 @@ def animate_points(
             ax.set_ylim(-1, 1)
             ax.set_zlim(-1, 1)
             ax.set_title(f"Point {frame + 1} of {n_points}")
+            return point
 
         animation.FuncAnimation(fig, update, frames=n_points, interval=interval)
         plt.show()
@@ -223,6 +223,7 @@ def animate_points(
             ax.set_xlim(-1, 1)
             ax.set_ylim(-1, 1)
             ax.set_title(f"Point {frame + 1} of {n_points}")
+            return point
 
         animation.FuncAnimation(fig, update, frames=n_points, interval=interval)
         plt.show()

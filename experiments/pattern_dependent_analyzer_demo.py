@@ -1,5 +1,5 @@
 import random
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -66,7 +66,7 @@ class CountMinSketch:
             raise ValueError("Sketches must have same dimensions for merging")
 
         merged = CountMinSketch(self.width, self.depth)
-        merged.sketch = self.sketch + other.sketch
+        merged.sketch = self.sketch + other.sketch  # type: ignore[assignment]
         return merged
 
     def reset(self):
@@ -96,7 +96,7 @@ class PatternDependentAnalyzer:
         ]
 
         # Node information
-        self.node_info = {}
+        self.node_info: Dict[int, Dict[str, Any]] = {}
 
     def simulate_pattern(self, pattern_id: int, toggles: List[Tuple[int, int]]):
         """Simulate switching for a specific pattern"""
@@ -143,9 +143,9 @@ class PatternDependentAnalyzer:
             }
 
             # Calculate sensitivity index
-            if sensitivity_metrics["avg_activity"] > 0:
+            if sensitivity_metrics["avg_activity"] > 0:  # type: ignore[operator]
                 sensitivity_metrics["sensitivity_index"] = (
-                    sensitivity_metrics["range"] / sensitivity_metrics["avg_activity"]
+                    sensitivity_metrics["range"] / sensitivity_metrics["avg_activity"]  # type: ignore[operator]
                 )
             else:
                 sensitivity_metrics["sensitivity_index"] = 0
@@ -203,7 +203,7 @@ class PatternDependentAnalyzer:
 
         # Normalize
         if len(sample_nodes) > 0:
-            correlation_matrix = correlation_matrix / len(sample_nodes)
+            correlation_matrix = correlation_matrix / len(sample_nodes)  # type: ignore[assignment]
 
         return correlation_matrix
 
@@ -257,7 +257,7 @@ class MultiCornerAnalyzer:
 
             # Get corner parameters
             params = self.corner_params.get(corner, {"voltage": 1.0})
-            voltage = params["voltage"]
+            voltage = float(params.get("voltage", 1.0))  # type: ignore[arg-type]
 
             # Estimate power (simplified)
             # Assuming capacitance = 1e-15F, frequency = 1GHz

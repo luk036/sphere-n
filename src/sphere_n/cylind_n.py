@@ -58,12 +58,6 @@ class CylindGen(ABC):
         Args:
             seed (int): The new seed.
         """
-        self.vdc.reseed(seed)
-        self.c_gen.reseed(seed)
-
-    def pop(self) -> List[float]:
-        """Generates and returns a vector of values."""
-        raise NotImplementedError
 
     def pop_batch(self, n: int) -> List[List[float]]:
         """Generates and returns n points in batch.

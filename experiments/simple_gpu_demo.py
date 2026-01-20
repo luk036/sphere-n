@@ -1,5 +1,5 @@
 import numpy as np
-from numba import cuda
+from numba import cuda, uint64
 
 
 # 1. GPU Kernel: This runs in parallel on thousands of GPU cores
@@ -35,10 +35,6 @@ def hll_kernel(data, registers, b):
         # ATOMIC MAX: Critical for GPU.
         # Ensures multiple threads don't overwrite each other.
         cuda.atomic.max(registers, idx, count)
-
-
-# Helper for uint64 types in Numba
-from numba import uint64
 
 
 def run_gpu_hll(data_array, b=12):
