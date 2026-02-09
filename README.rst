@@ -32,9 +32,9 @@
 .. image:: https://codecov.io/gh/luk036/sphere-n/branch/main/graph/badge.svg?token=86zuv3iw31
     :target: https://codecov.io/gh/luk036/sphere-n
 
-======
+========
 sphere-n
-======
+========
 
 
     A library for low-discrepancy sequences
