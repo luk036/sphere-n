@@ -449,10 +449,10 @@ def demo_pattern_corner_analysis():
     for corner, results in corner_impact["corner_results"].items():
         print(
             f"  {corner:12s}: {results['toggle_count']:6.1f} toggles, "
-            f"Power: {results['estimated_power']*1e6:6.2f} μW"
+            f"Power: {results['estimated_power'] * 1e6:6.2f} μW"
         )
 
-    print(f"\n  Power Variation: {corner_impact['power_variation']*100:.1f}%")
+    print(f"\n  Power Variation: {corner_impact['power_variation'] * 100:.1f}%")
     print(f"  Worst-Case Corner: {corner_impact['worst_case_corner']}")
 
     # Pattern correlation analysis

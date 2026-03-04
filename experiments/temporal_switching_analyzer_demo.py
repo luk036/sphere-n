@@ -443,8 +443,8 @@ def demo_temporal_analysis():
         duration=200e-12,  # 200ps window
     )
 
-    print(f"Peak current: {np.max(current_envelope)*1e3:.2f} mA")
-    print(f"Average current: {np.mean(current_envelope)*1e3:.2f} mA")
+    print(f"Peak current: {np.max(current_envelope) * 1e3:.2f} mA")
+    print(f"Average current: {np.mean(current_envelope) * 1e3:.2f} mA")
 
     # Create visualization
     fig, axes = plt.subplots(2, 2, figsize=(12, 10))

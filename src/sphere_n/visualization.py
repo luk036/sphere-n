@@ -21,10 +21,10 @@ def plot_2d_projection(
         **kwargs: Additional arguments for scatter plot.
 
     Example:
-        >>> from sphere_n import SphereN
+        >>> from sphere_n.sphere_n import SphereN
         >>> sgen = SphereN([2, 3, 5, 7])
         >>> points = sgen.pop_batch(100)
-        >>> plot_2d_projection(points, projection='xy')
+        >>> plot_2d_projection(points, projection='xy')  # doctest: +SKIP
     """
     try:
         import matplotlib.pyplot as plt
@@ -68,10 +68,10 @@ def plot_3d_projection(points: List[List[float]], ax=None, **kwargs) -> None:
         **kwargs: Additional arguments for scatter plot.
 
     Example:
-        >>> from sphere_n import Sphere3
+        >>> from sphere_n.sphere_n import Sphere3
         >>> sgen = Sphere3([2, 3, 5])
         >>> points = sgen.pop_batch(100)
-        >>> plot_3d_projection(points)
+        >>> plot_3d_projection(points)  # doctest: +SKIP
     """
     try:
         import matplotlib.pyplot as plt
@@ -120,13 +120,13 @@ def plot_distribution_comparison(
         title: Plot title.
 
     Example:
-        >>> from sphere_n import SphereN
+        >>> from sphere_n.sphere_n import SphereN
         >>> import numpy as np
         >>> sgen = SphereN([2, 3, 5, 7])
         >>> lds_points = np.array(sgen.pop_batch(100))
         >>> random_points = np.random.randn(100, 4)
         >>> random_points /= np.linalg.norm(random_points, axis=1)[:, None]
-        >>> plot_distribution_comparison(lds_points.tolist(), random_points.tolist())
+        >>> plot_distribution_comparison(lds_points.tolist(), random_points.tolist())  # doctest: +SKIP
     """
     try:
         import matplotlib.pyplot as plt
@@ -179,18 +179,17 @@ def animate_points(
         **kwargs: Additional arguments for scatter plot.
 
     Example:
-        >>> from sphere_n import Sphere3
+        >>> from sphere_n.sphere_n import Sphere3
         >>> sgen = Sphere3([2, 3, 5])
         >>> sgen.reseed(42)
-        >>> animate_points(sgen, n_points=100)
+        >>> animate_points(sgen, n_points=100)  # doctest: +SKIP
     """
     try:
         import matplotlib.animation as animation
         import matplotlib.pyplot as plt
     except ImportError:
         raise ImportError(
-            "matplotlib is required for animation. "
-            "Install with: pip install matplotlib"
+            "matplotlib is required for animation. Install with: pip install matplotlib"
         )
 
     generator.reseed(42)

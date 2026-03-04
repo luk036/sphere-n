@@ -358,7 +358,7 @@ def demo_switching_power_analysis():
         category = analyzer.node_categories[node_id]
         print(f"  {rank}. Node {node_id} ({category}):")
         print(
-            f"     Power: {power*1e6:.2f} μW, Activity: {activity:.3f}, Capacitance: {cap*1e15:.1f} fF"
+            f"     Power: {power * 1e6:.2f} μW, Activity: {activity:.3f}, Capacitance: {cap * 1e15:.1f} fF"
         )
 
     # Analyze by category
@@ -366,8 +366,8 @@ def demo_switching_power_analysis():
     category_stats = analyzer.analyze_by_category()
     for category, stats in category_stats.items():
         print(
-            f"  {category:10s}: {stats['total_power']*1e6:6.2f} μW "
-            f"({stats['node_count']:3d} nodes, avg: {stats.get('avg_power', 0)*1e6:.2f} μW)"
+            f"  {category:10s}: {stats['total_power'] * 1e6:6.2f} μW "
+            f"({stats['node_count']:3d} nodes, avg: {stats.get('avg_power', 0) * 1e6:.2f} μW)"
         )
 
     # Spatial analysis
@@ -784,8 +784,8 @@ def demo_temporal_analysis():
         duration=200e-12,  # 200ps window
     )
 
-    print(f"Peak current: {np.max(current_envelope)*1e3:.2f} mA")
-    print(f"Average current: {np.mean(current_envelope)*1e3:.2f} mA")
+    print(f"Peak current: {np.max(current_envelope) * 1e3:.2f} mA")
+    print(f"Average current: {np.mean(current_envelope) * 1e3:.2f} mA")
 
     # Create visualization
     fig, axes = plt.subplots(2, 2, figsize=(12, 10))
@@ -1232,10 +1232,10 @@ def demo_pattern_corner_analysis():
     for corner, results in corner_impact["corner_results"].items():
         print(
             f"  {corner:12s}: {results['toggle_count']:6.1f} toggles, "
-            f"Power: {results['estimated_power']*1e6:6.2f} μW"
+            f"Power: {results['estimated_power'] * 1e6:6.2f} μW"
         )
 
-    print(f"\n  Power Variation: {corner_impact['power_variation']*100:.1f}%")
+    print(f"\n  Power Variation: {corner_impact['power_variation'] * 100:.1f}%")
     print(f"  Worst-Case Corner: {corner_impact['worst_case_corner']}")
 
     # Pattern correlation analysis
