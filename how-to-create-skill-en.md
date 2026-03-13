@@ -76,15 +76,9 @@ Explain the Python API and any requirements.
 
 ### Python API
 
-```python
-# Show code examples
-```
 
 ### Requirements
 
-```bash
-# List pip dependencies
-```
 
 ### Features
 

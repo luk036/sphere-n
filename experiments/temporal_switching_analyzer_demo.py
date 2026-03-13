@@ -1,6 +1,6 @@
 import random
 from collections import defaultdict
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -190,7 +190,7 @@ class TemporalSwitchingAnalyzer:
 
     def find_simultaneous_switching(
         self, threshold: float = 0.3
-    ) -> List[Tuple[int, float]]:
+    ) -> List[Tuple[int, Any]]:  # type: ignore[type-arg]
         """Find time windows with high simultaneous switching"""
         hot_windows = []
 
@@ -250,7 +250,7 @@ class CurrentEnvelopeEstimator:
 
     def estimate_current_envelope(
         self, time_resolution: float = 10e-12, duration: float = 1e-9
-    ) -> np.ndarray:
+    ) -> Tuple[np.ndarray, np.ndarray]:  # type: ignore[type-arg]
         """
         Estimate worst-case current envelope
 
@@ -298,7 +298,7 @@ class CurrentEnvelopeEstimator:
             avg_interval_time = avg_interval_cycles / (1e9)  # Assuming 1GHz
 
             # Add pulses to envelope
-            t = 0
+            t = 0.0
             while t < duration:
                 start_sample = int(t / time_resolution)
                 end_sample = start_sample + len(pulse)

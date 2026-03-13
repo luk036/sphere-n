@@ -51,13 +51,16 @@ pip install nbformat jupytext
 import re
 import sys
 from pathlib import Path
+from types import ModuleType
 from typing import List, Optional, Tuple
 
 try:
     import nbformat
     from nbformat import v4 as nbf
+    _nbformat: Optional[ModuleType] = nbformat
 except ImportError:
-    nbformat = None
+    _nbformat = None
+    nbformat = None  # type: ignore[assignment]
 
 
 class ScriptToNotebookConverter:
@@ -291,7 +294,7 @@ class ScriptToNotebookConverter:
             True if line is a section comment
         """
         stripped = line.strip()
-        return (
+        return bool(
             stripped.startswith("# ")
             and (
                 stripped.endswith("---")
@@ -299,7 +302,8 @@ class ScriptToNotebookConverter:
                 or re.match(r"#\s*={3,}", stripped)
                 or re.match(r"#\s*-{3,}", stripped)
             )
-        ) or (stripped.startswith("###") and len(stripped) > 3)
+            or (stripped.startswith("###") and len(stripped) > 3)
+        )
 
     def _extract_section_title(self, line: str, lines: List[str], index: int) -> str:
         r"""Extract section title from comment.
@@ -396,7 +400,7 @@ class ScriptToNotebookConverter:
 
     def convert(
         self,
-        script_path: str,
+        script_path: "Path | str",
         output_path: Optional[str] = None,
         title: Optional[str] = None,
     ) -> str:

@@ -4,7 +4,7 @@ This module provides utilities for visualizing points generated
 by sphere-n generators on 2D and 3D spheres.
 """
 
-from typing import List
+from typing import Any, List
 
 import numpy as np
 
@@ -198,7 +198,7 @@ def animate_points(
         fig = plt.figure(figsize=(10, 8))
         ax = fig.add_subplot(111, projection="3d")
 
-        def update(frame: int) -> List[float]:
+        def update(frame: int) -> list[Any]:
             point = generator.pop()
             ax.clear()
             x, y, z = point[0], point[1], point[2]
@@ -214,7 +214,7 @@ def animate_points(
     else:
         fig, ax = plt.subplots(figsize=(8, 8))
 
-        def update(frame: int) -> List[float]:
+        def update(frame: int) -> list[Any]:
             point = generator.pop()
             ax.clear()
             x, y = point[0], point[1]

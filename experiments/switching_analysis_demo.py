@@ -639,7 +639,7 @@ class CurrentEnvelopeEstimator:
             avg_interval_time = avg_interval_cycles / (1e9)  # Assuming 1GHz
 
             # Add pulses to envelope
-            t = 0
+            t = 0.0
             while t < duration:
                 start_sample = int(t / time_resolution)
                 end_sample = start_sample + len(pulse)
