@@ -8,7 +8,7 @@ from numpy.typing import NDArray
 def discrep_2(K: NDArray[Any], X: npt.NDArray[np.float64]) -> float:
     """dispersion measure
 
-    Arguments:
+    Args:
         K (NDArray[Any]): Array representing indices
         X (NDArray[np.float64]): Array representing points
 
