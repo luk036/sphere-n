@@ -39,14 +39,25 @@ import numpy as np
 from lds_gen.lds import Sphere, VdCorput  # low-discrepancy sequence generators
 
 PI: float = np.pi
+"""Pi constant (π), used for angle calculations and mapping ranges."""
+
 # Lookup table for interpolation: 300 points from 0 to PI provides good resolution
 # for mapping van der Corput sequence to sphere coordinates
 X: np.ndarray = np.linspace(0.0, PI, 300)
+"""Lookup points from 0 to π for interpolation."""
+
 NEG_COSINE: np.ndarray = -np.cos(X)  # -cos(x) mapping function
+"""Negative cosine of X, used in the mapping function."""
+
 SINE: np.ndarray = np.sin(X)  # sin(x) for mapping calculations
+"""Sine of X, used in the mapping calculations."""
+
 # F2 interpolation function for 3-sphere: F2(x) = (x - cos(x)sin(x)) / 2
 F2: np.ndarray = (X + NEG_COSINE * SINE) / 2.0
+"""Interpolation function for 3-sphere: F2(x) = (x - cos(x)sin(x)) / 2."""
+
 HALF_PI = PI / 2.0  # Used for mapping ranges to [0, π/2]
+"""Half of pi (π/2), used for mapping ranges."""
 
 
 @cache

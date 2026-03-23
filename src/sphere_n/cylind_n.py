@@ -41,6 +41,7 @@ import numpy as np
 from lds_gen.lds import Circle, VdCorput  # low-discrepancy sequence generators
 
 PI: float = np.pi
+"""Pi constant (π), used for angle calculations in cylindrical mapping."""
 
 
 class CylindGen(ABC):
@@ -48,7 +49,11 @@ class CylindGen(ABC):
 
     @abstractmethod
     def pop(self) -> List[float]:
-        """Generates and returns a vector of values."""
+        """Generates and returns a vector of values representing a point.
+
+        Returns:
+            List[float]: A vector of values representing a point on the geometry.
+        """
         raise NotImplementedError
 
     @abstractmethod
