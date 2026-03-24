@@ -61,8 +61,8 @@ HALF_PI = PI / 2.0  # Used for mapping ranges to [0, π/2]
 
 
 @cache
-def get_tp_recursive(n: int) -> np.ndarray:
-    """Recursively calculates the table-lookup of the mapping function for n.
+def get_tp_even(n: int) -> np.ndarray:
+    """Recursively calculates the table-lookup of the mapping function for n (even).
 
     Args:
         n (int): The dimension.
@@ -72,9 +72,23 @@ def get_tp_recursive(n: int) -> np.ndarray:
     """
     if n == 0:
         return X
+    tp_minus2 = get_tp_even(n - 2)
+    return ((n - 1) * tp_minus2 + NEG_COSINE * SINE ** (n - 1)) / n
+
+
+@cache
+def get_tp_odd(n: int) -> np.ndarray:
+    """Recursively calculates the table-lookup of the mapping function for n (odd).
+
+    Args:
+        n (int): The dimension.
+
+    Returns:
+        np.ndarray: The table-lookup of the mapping function.
+    """
     if n == 1:
         return NEG_COSINE
-    tp_minus2 = get_tp_recursive(n - 2)
+    tp_minus2 = get_tp_odd(n - 2)
     return ((n - 1) * tp_minus2 + NEG_COSINE * SINE ** (n - 1)) / n
 
 
@@ -87,7 +101,7 @@ def get_tp(n: int) -> np.ndarray:
     Returns:
         np.ndarray: The table-lookup of the mapping function.
     """
-    return get_tp_recursive(n)
+    return get_tp_even(n) if n % 2 == 0 else get_tp_odd(n)
 
 
 class SphereGen(ABC):
