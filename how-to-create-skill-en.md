@@ -135,16 +135,16 @@ class ScriptToNotebookConverter:
         """Parse Python script content into cells."""
         cells: List[Tuple[str, str]] = []
         lines = content.split("\n")
-        
+
         # Implementation details...
-        
+
         return cells
 
     def create_notebook(self, cells: List[Tuple[str, str]]) -> dict:
         """Create a notebook structure from cells."""
         if nbformat is None:
             raise ImportError("nbformat is required.")
-        
+
         nb = nbf.new_notebook()
         for cell_type, content in cells:
             if cell_type == "markdown":
@@ -224,26 +224,26 @@ def _is_section_comment(self, line: str) -> bool:
 
 def _is_standalone_comment(self, line: str, lines: List[str], index: int) -> bool:
     """Check if comment should be converted to markdown cell.
-    
+
     Only top-level comments (indentation 0) become markdown cells.
     """
     stripped = line.strip()
-    
+
     # Must be a comment at column 0
     if not stripped.startswith("#"):
         return False
-    
+
     # Must be at indentation level 0 (not inside a function/class)
     leading_spaces = len(line) - len(line.lstrip())
     if leading_spaces > 0:
         return False
-    
+
     # Skip delimiters and section comments
     if self._is_cell_delimiter(line):
         return False
     if self._is_section_comment(line):
         return False
-    
+
     # Check if followed by code
     has_code_after = False
     for j in range(index + 1, len(lines)):
@@ -254,7 +254,7 @@ def _is_standalone_comment(self, line: str, lines: List[str], index: int) -> boo
             continue
         has_code_after = True
         break
-    
+
     return has_code_after
 ```
 
@@ -264,7 +264,7 @@ def _is_standalone_comment(self, line: str, lines: List[str], index: int) -> boo
 def create_notebook(self, cells: List[Tuple[str, str]]) -> dict:
     """Create notebook structure from cells."""
     nb = nbf.new_notebook()
-    
+
     for cell_type, content in cells:
         if cell_type == "markdown":
             nb.cells.append(nbf.new_markdown_cell(content))
@@ -273,7 +273,7 @@ def create_notebook(self, cells: List[Tuple[str, str]]) -> dict:
             cell["outputs"] = []
             cell["execution_count"] = None
             nb.cells.append(cell)
-    
+
     return nb
 ```
 

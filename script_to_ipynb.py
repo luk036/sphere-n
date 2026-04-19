@@ -57,6 +57,7 @@ from typing import List, Optional, Tuple
 try:
     import nbformat
     from nbformat import v4 as nbf
+
     _nbformat: Optional[ModuleType] = nbformat
 except ImportError:
     _nbformat = None

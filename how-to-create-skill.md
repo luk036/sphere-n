@@ -142,16 +142,16 @@ class ScriptToNotebookConverter:
         """将 Python 脚本内容解析为单元格。"""
         cells: List[Tuple[str, str]] = []
         lines = content.split("\n")
-        
+
         # 实现细节...
-        
+
         return cells
 
     def create_notebook(self, cells: List[Tuple[str, str]]) -> dict:
         """从单元格创建 notebook 结构。"""
         if nbformat is None:
             raise ImportError("需要安装 nbformat。")
-        
+
         nb = nbf.new_notebook()
         for cell_type, content in cells:
             if cell_type == "markdown":
@@ -231,26 +231,26 @@ def _is_section_comment(self, line: str) -> bool:
 
 def _is_standalone_comment(self, line: str, lines: List[str], index: int) -> bool:
     """检查注释是否应该转换为 markdown 单元格。
-    
+
     只有顶层注释（缩进为 0）才会成为 markdown 单元格。
     """
     stripped = line.strip()
-    
+
     # 必须是第 0 列的注释
     if not stripped.startswith("#"):
         return False
-    
+
     # 必须在缩进级别 0（不在函数/类内部）
     leading_spaces = len(line) - len(line.lstrip())
     if leading_spaces > 0:
         return False
-    
+
     # 跳过分隔符和章节注释
     if self._is_cell_delimiter(line):
         return False
     if self._is_section_comment(line):
         return False
-    
+
     # 检查后面是否有代码
     has_code_after = False
     for j in range(index + 1, len(lines)):
@@ -261,7 +261,7 @@ def _is_standalone_comment(self, line: str, lines: List[str], index: int) -> boo
             continue
         has_code_after = True
         break
-    
+
     return has_code_after
 ```
 
@@ -271,7 +271,7 @@ def _is_standalone_comment(self, line: str, lines: List[str], index: int) -> boo
 def create_notebook(self, cells: List[Tuple[str, str]]) -> dict:
     """从单元格创建 notebook 结构。"""
     nb = nbf.new_notebook()
-    
+
     for cell_type, content in cells:
         if cell_type == "markdown":
             nb.cells.append(nbf.new_markdown_cell(content))
@@ -280,7 +280,7 @@ def create_notebook(self, cells: List[Tuple[str, str]]) -> dict:
             cell["outputs"] = []
             cell["execution_count"] = None
             nb.cells.append(cell)
-    
+
     return nb
 ```
 

@@ -209,14 +209,14 @@ import json
 
 def parse_script_to_cells(script_path):
     """Parse Python script and convert to notebook cells."""
-    
+
     with open(script_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
-    
+
     cells = []
     current_cell = []
     cell_type = 'code'
-    
+
     for line in lines:
         # Detect markdown sections (comments starting with #)
         if line.strip().startswith('#') and not current_cell:
@@ -233,7 +233,7 @@ def parse_script_to_cells(script_path):
         else:
             # Code
             current_cell.append(line)
-    
+
     # Add remaining code as last cell
     if current_cell:
         cells.append({
@@ -243,12 +243,12 @@ def parse_script_to_cells(script_path):
             'execution_count': None,
             'outputs': []
         })
-    
+
     return cells
 
 def create_notebook(cells, title='Converted Notebook'):
     """Create notebook structure."""
-    
+
     notebook = {
         'cells': cells,
         'metadata': {
@@ -270,18 +270,18 @@ def create_notebook(cells, title='Converted Notebook'):
         'nbformat': 4,
         'nbformat_minor': 4
     }
-    
+
     return notebook
 
 def convert_script_to_notebook(script_path, output_path):
     """Convert script to notebook."""
-    
+
     cells = parse_script_to_cells(script_path)
     notebook = create_notebook(cells)
-    
+
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(notebook, f, indent=1, ensure_ascii=False)
-    
+
     print(f'Notebook created: {output_path}')
 
 # Usage
@@ -553,31 +553,31 @@ def main():
     print("Loading data...")
     df = load_data('customer_data.csv')
     print(f"Loaded {len(df)} records")
-    
+
     print("\nPreprocessing features...")
     df_processed = preprocess_features(df)
-    
+
     print("\nSplitting data...")
     X = df_processed.drop('churn', axis=1)
     y = df_processed['churn']
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=TEST_SIZE, random_state=RANDOM_STATE
     )
-    
+
     print("\nTraining model...")
     model = train_model(X_train, y_train)
-    
+
     print("\nEvaluating model...")
     y_pred = model.predict(X_test)
     print(classification_report(y_test, y_pred))
-    
+
     print("\nFeature importance:")
     importance = pd.DataFrame({
         'feature': X.columns,
         'importance': model.feature_importances_
     }).sort_values('importance', ascending=False)
     print(importance.head(10))
-    
+
     # Plot feature importance
     plt.figure(figsize=(10, 6))
     importance.head(10).plot.bar(x='feature', y='importance')
@@ -934,6 +934,6 @@ Converting Python scripts to Jupyter notebooks involves:
 
 ---
 
-**Author:** Generated Report  
-**Date:** 2026-03-11  
+**Author:** Generated Report
+**Date:** 2026-03-11
 **Version:** 1.0

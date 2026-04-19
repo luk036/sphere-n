@@ -167,7 +167,11 @@ def plot_distribution_comparison(
 
 
 def animate_points(
-    generator: Any, n_points: int = 50, interval: int = 100, projection: str = "3d", **kwargs
+    generator: Any,
+    n_points: int = 50,
+    interval: int = 100,
+    projection: str = "3d",
+    **kwargs,
 ) -> None:
     """Create animated visualization of point generation.
 
