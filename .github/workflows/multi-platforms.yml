@@ -11,7 +11,7 @@ jobs:
         version: ["3.10", "3.11"]
     steps:
       - uses: actions/checkout@v5
-      - uses: conda-incubator/setup-miniconda@v2
+      - uses: conda-incubator/setup-miniconda@v3
         with:
           activate-environment: test
           environment-file: environment.yml
@@ -31,7 +31,9 @@ jobs:
         shell: bash -l {0}
         run: |
           conda install pytest
+          conda install pip
+          conda install setuptools wheel setuptools_scm
           # pip install git+https://github.com/luk036/lds-gen.git
           pip install lds-gen
-          python setup.py develop
+          pip install -e .
           pytest
