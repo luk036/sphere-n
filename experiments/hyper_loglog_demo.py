@@ -141,7 +141,7 @@ class HyperLogLog:
                 self.registers[i] = other.registers[i]
 
 
-def test_hyperloglog():
+def test_hyperloglog() -> None:
     """
     Test and demonstrate the HyperLogLog algorithm.
     """
