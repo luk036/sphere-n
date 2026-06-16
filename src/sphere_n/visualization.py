@@ -10,7 +10,7 @@ import numpy as np
 
 
 def plot_2d_projection(
-    points: List[List[float]], projection: str = "xy", ax: Any = None, **kwargs
+    points: List[List[float]], projection: str = "xy", ax: Any = None, **kwargs: Any
 ) -> None:
     """Plot 2D projection of high-dimensional sphere points.
 
@@ -59,7 +59,7 @@ def plot_2d_projection(
         plt.show()
 
 
-def plot_3d_projection(points: List[List[float]], ax: Any = None, **kwargs) -> None:
+def plot_3d_projection(points: List[List[float]], ax: Any = None, **kwargs: Any) -> None:
     """Plot 3D projection of sphere points.
 
     Args:
@@ -171,7 +171,7 @@ def animate_points(
     n_points: int = 50,
     interval: int = 100,
     projection: str = "3d",
-    **kwargs,
+    **kwargs: Any,
 ) -> None:
     """Create animated visualization of point generation.
 
