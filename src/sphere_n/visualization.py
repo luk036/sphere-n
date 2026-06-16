@@ -59,7 +59,9 @@ def plot_2d_projection(
         plt.show()
 
 
-def plot_3d_projection(points: List[List[float]], ax: Any = None, **kwargs: Any) -> None:
+def plot_3d_projection(
+    points: List[List[float]], ax: Any = None, **kwargs: Any
+) -> None:
     """Plot 3D projection of sphere points.
 
     Args:
