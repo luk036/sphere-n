@@ -1,8 +1,9 @@
 """Additional tests to improve sphere_n code coverage."""
 
+from pytest import approx, raises
+
 from sphere_n.cylind_n import CylindN
 from sphere_n.sphere_n import SphereN
-from pytest import approx, raises
 
 
 class TestCylindN:
