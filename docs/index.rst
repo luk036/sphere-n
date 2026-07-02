@@ -34,6 +34,7 @@ Contents
    License <license>
    Authors <authors>
    Changelog <changelog>
+   Figures Demo <figures_demo>
    Module Reference <api/modules>
 
 
