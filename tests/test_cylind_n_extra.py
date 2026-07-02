@@ -1,7 +1,7 @@
 """Additional CylindN tests covering edge cases."""
 
 import numpy as np
-from pytest import approx, raises
+from pytest import approx
 
 from sphere_n.cylind_n import CylindN
 
