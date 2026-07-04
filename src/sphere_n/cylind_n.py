@@ -84,6 +84,12 @@ class CylindGen(ABC):
         """
         return [self.pop() for _ in range(n)]
 
+    def iter_batch(self, n: int):
+        if n <= 0:
+            raise ValueError(f"n must be positive, got {n}")
+        for _ in range(n):
+            yield self.pop()
+
 
 class CylindN(CylindGen):
     """Low-discrepancy sequence generator using cylindrical mapping.

@@ -32,64 +32,51 @@ Algorithm Overview:
 
 import math
 from abc import ABC, abstractmethod
-from functools import cache
+from functools import cache, lru_cache
 from typing import List, Union
 
 import numpy as np
 from lds_gen.lds import Sphere, VdCorput  # low-discrepancy sequence generators
 
 PI: float = np.pi
-"""Pi constant (π), used for angle calculations and mapping ranges."""
-
-# Lookup table for interpolation: 300 points from 0 to PI provides good resolution
-# for mapping van der Corput sequence to sphere coordinates
-X: np.ndarray = np.linspace(0.0, PI, 300)
-"""Lookup points from 0 to π for interpolation."""
-
-NEG_COSINE: np.ndarray = -np.cos(X)  # -cos(x) mapping function
-"""Negative cosine of X, used in the mapping function."""
-
-SINE: np.ndarray = np.sin(X)  # sin(x) for mapping calculations
-"""Sine of X, used in the mapping calculations."""
-
-# F2 interpolation function for 3-sphere: F2(x) = (x - cos(x)sin(x)) / 2
-F2: np.ndarray = (X + NEG_COSINE * SINE) / 2.0
-"""Interpolation function for 3-sphere: F2(x) = (x - cos(x)sin(x)) / 2."""
-
-HALF_PI = PI / 2.0  # Used for mapping ranges to [0, π/2]
-"""Half of pi (π/2), used for mapping ranges."""
+HALF_PI: float = PI / 2.0
 
 
 @cache
+def _get_x() -> np.ndarray:
+    return np.linspace(0.0, PI, 300)
+
+
+@cache
+def _get_neg_cosine() -> np.ndarray:
+    return -np.cos(_get_x())
+
+
+@cache
+def _get_sine() -> np.ndarray:
+    return np.sin(_get_x())
+
+
+@cache
+def _get_f2() -> np.ndarray:
+    x = _get_x()
+    return (x + _get_neg_cosine() * _get_sine()) / 2.0
+
+
+@lru_cache(maxsize=32)
 def get_tp_even(n: int) -> np.ndarray:
-    """Recursively calculates the table-lookup of the mapping function for n (even).
-
-    Args:
-        n (int): The dimension.
-
-    Returns:
-        np.ndarray: The table-lookup of the mapping function.
-    """
     if n == 0:
-        return X
+        return _get_x()
     tp_minus2 = get_tp_even(n - 2)
-    return ((n - 1) * tp_minus2 + NEG_COSINE * SINE ** (n - 1)) / n
+    return ((n - 1) * tp_minus2 + _get_neg_cosine() * _get_sine() ** (n - 1)) / n
 
 
-@cache
+@lru_cache(maxsize=32)
 def get_tp_odd(n: int) -> np.ndarray:
-    """Recursively calculates the table-lookup of the mapping function for n (odd).
-
-    Args:
-        n (int): The dimension.
-
-    Returns:
-        np.ndarray: The table-lookup of the mapping function.
-    """
     if n == 1:
-        return NEG_COSINE
+        return _get_neg_cosine()
     tp_minus2 = get_tp_odd(n - 2)
-    return ((n - 1) * tp_minus2 + NEG_COSINE * SINE ** (n - 1)) / n
+    return ((n - 1) * tp_minus2 + _get_neg_cosine() * _get_sine() ** (n - 1)) / n
 
 
 def get_tp(n: int) -> np.ndarray:
@@ -136,6 +123,12 @@ class SphereGen(ABC):
         """
         return [self.pop() for _ in range(n)]
 
+    def iter_batch(self, n: int):
+        if n <= 0:
+            raise ValueError(f"n must be positive, got {n}")
+        for _ in range(n):
+            yield self.pop()
+
 
 class Sphere3(SphereGen):
     """3-Sphere sequence generator
@@ -179,7 +172,7 @@ class Sphere3(SphereGen):
             List[float]: A 4-dimensional vector representing a point on S^3.
         """
         ti = HALF_PI * self.vdc.pop()  # map to [t0, tm-1]
-        xi = np.interp(ti, F2, X)
+        xi = np.interp(ti, _get_f2(), _get_x())
         cosxi = math.cos(xi)
         sinxi = math.sin(xi)
         return [sinxi * s for s in self.sphere2.pop()] + [cosxi]
@@ -227,7 +220,7 @@ class SphereN(SphereGen):
         """
         if self.n == 2:
             ti = HALF_PI * self.vdc.pop()  # map to [t0, tm-1]
-            xi = np.interp(ti, F2, X)
+            xi = np.interp(ti, _get_f2(), _get_x())
             cosxi = math.cos(xi)
             sinxi = math.sin(xi)
             return [sinxi * s for s in self.s_gen.pop()] + [cosxi]
@@ -235,7 +228,7 @@ class SphereN(SphereGen):
         vd = self.vdc.pop()
         tp = get_tp(self.n)
         ti = tp[0] + self.range * vd  # map to [t0, tm-1]
-        xi = np.interp(ti, tp, X)
+        xi = np.interp(ti, tp, _get_x())
         sinphi = math.sin(xi)
         return [xi * sinphi for xi in self.s_gen.pop()] + [math.cos(xi)]
 
