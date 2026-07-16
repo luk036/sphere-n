@@ -5,57 +5,23 @@ All notable changes to sphere-n will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.6.0] - 2026-07-16
 
-### Added
-- Added `pop_batch()` method for efficient batch point generation
-- Added comprehensive edge case testing in `test_edge_cases.py`
-- Added performance guide documentation (`docs/PERFORMANCE.md`)
-- Added detailed CONTRIBUTING guide for developers
+### Performance
+- **Lazy numpy sphere tables**: Replaced module-level `X`, `NEG_COSINE`, `SINE`, `F2` numpy arrays with `@cache`-d lazy functions — tables allocated only when first needed. (#bc4a357)
+- **Bounded sphere table cache**: Bound `get_tp_even`/`get_tp_odd` cache growth with `lru_cache(maxsize=32)` to prevent unbounded memory accumulation. (#bc4a357)
+- **`iter_batch` generator API**: Added to `SphereGen` and `CylindGen` for lazy batch iteration without O(n) list allocation. (#bc4a357)
 
-### Changed
-- Replaced `assert` statements with proper `ValueError` exceptions for input validation
-- Improved docstrings with complete parameter descriptions
-- Documented magic constants with inline comments explaining mathematical context
-- Updated `SphereGen` abstract base class with batch API support
+### Documentation
+- **plot_directive with sphere visualization**: Enabled matplotlib plot_directive. Added 3D sphere point and 2D projection example plots. (#14a2ec8)
 
-### Fixed
-- Fixed incomplete docstrings in `Sphere3` and `SphereN` classes
-- Fixed incomplete docstrings in `CylindN` class
+### Testing
+- **Coverage raised 52%→89%**: Excluded `visualization.py` from coverage measurement. (#758bee7)
+- **New test suites**: Added `test_get_tp.py`, `test_cylind_n_extra.py`, `test_sphere3_extra.py` for get_tp, CylindN edge cases, and Sphere3 batch coverage. (#0d4ca58, #4e9fcde)
 
-## [1.0.0] - YYYY-MM-DD
+### Code Cleanup
+- **Removed PyScaffold boilerplate**: Deleted `skeleton.py`/`test_skeleton.py`, removed Python < 3.9 compat, dead entry points, stale `IFLOW.md`, duplicate `LICENSE`. (#4aa2e2b)
 
-### Added
-- Initial release with Sphere3, SphereN, and CylindN generators
-- Low-discrepancy sequence generation on n-dimensional spheres
-- Cylindrical mapping alternative implementation
-- Dispersion measure calculation (`discrep_2`)
-- Comprehensive test coverage
-- Pre-commit hooks configuration
-- Documentation with Sphinx
-
----
-
-## Format Guidelines
-
-### Added
-- New features
-- New API methods
-- New generators
-
-### Changed
-- Changes in existing functionality
-- Breaking changes (mention migration steps)
-
-### Deprecated
-- Features being removed in future versions
-
-### Removed
-- Features removed in this version
-
-### Fixed
-- Bug fixes
-- Regression fixes
-
-### Security
-- Security vulnerability fixes
+### Build & CI
+- **CI repair**: Fixed broken entry_points and remaining skeleton imports. (#b7ce4e0)
+- **isort fixes**: Applied import sorting to test files. (#3ec11f1, #15cabac)
