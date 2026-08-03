@@ -137,26 +137,6 @@ class CylindN(CylindGen):
         self.vdc.reseed(seed)
         self.c_gen.reseed(seed)
 
-    def pop_batch(self, n: int) -> List[List[float]]:
-        """Generates and returns n points in batch.
-
-        This is more efficient than calling pop() n times due to reduced
-        Python loop overhead.
-
-        Args:
-            n (int): Number of points to generate.
-
-        Returns:
-            List[List[float]]: List of n points, each as a vector.
-
-        Examples:
-            >>> cgen = CylindN([2, 3, 5, 7])
-            >>> cgen.reseed(0)
-            >>> cgen.pop_batch(3)
-            [[...], [...], [...]]
-        """
-        return [self.pop() for _ in range(n)]
-
 
 if __name__ == "__main__":
     import doctest
