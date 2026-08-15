@@ -30,6 +30,19 @@ class TestCylindN:
         assert len(batch) == 5
         assert all(len(p) > 0 for p in batch)
 
+    def test_cylind_n_iter_batch(self) -> None:
+        """Test CylindN iter_batch yields the correct number of points."""
+        cgen = CylindN([2, 3, 5, 7])
+        batch = list(cgen.iter_batch(3))
+        assert len(batch) == 3
+        assert all(len(p) > 0 for p in batch)
+
+    def test_cylind_n_iter_batch_invalid(self) -> None:
+        """Test CylindN iter_batch rejects non-positive counts."""
+        cgen = CylindN([2, 3, 5, 7])
+        with raises(ValueError, match="n must be positive"):
+            list(cgen.iter_batch(0))
+
 
 class TestSphereN:
     """Tests covering SphereN edge cases."""
@@ -56,3 +69,21 @@ class TestSphereN:
         sgen.reseed(0)
         result = sgen.pop()
         assert result[0] == approx(0.2913440162992141)
+
+    def test_sphere_n_invalid_dim(self) -> None:
+        """Test SphereN rejects dimension < 2."""
+        with raises(ValueError, match="Dimension n must be >= 2"):
+            SphereN([2, 3])
+
+    def test_sphere_n_iter_batch(self) -> None:
+        """Test SphereN iter_batch yields the correct number of points."""
+        sgen = SphereN([2, 3, 5, 7])
+        batch = list(sgen.iter_batch(3))
+        assert len(batch) == 3
+        assert all(len(p) > 0 for p in batch)
+
+    def test_sphere_n_iter_batch_invalid(self) -> None:
+        """Test SphereN iter_batch rejects non-positive counts."""
+        sgen = SphereN([2, 3, 5, 7])
+        with raises(ValueError, match="n must be positive"):
+            list(sgen.iter_batch(0))
