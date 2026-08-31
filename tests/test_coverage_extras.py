@@ -3,7 +3,7 @@
 from pytest import approx, raises
 
 from sphere_n.cylind_n import CylindN
-from sphere_n.sphere_n import SphereN
+from lds_gen.sphere_n import SphereN
 
 
 class TestCylindN:
@@ -72,7 +72,7 @@ class TestSphereN:
 
     def test_sphere_n_invalid_dim(self) -> None:
         """Test SphereN rejects dimension < 2."""
-        with raises(ValueError, match="Dimension n must be >= 2"):
+        with raises(AssertionError):
             SphereN([2, 3])
 
     def test_sphere_n_iter_batch(self) -> None:

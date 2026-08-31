@@ -21,7 +21,7 @@ def plot_2d_projection(
         **kwargs: Additional arguments for scatter plot.
 
     Example:
-        >>> from sphere_n.sphere_n import SphereN
+        >>> from lds_gen.sphere_n import SphereN
         >>> sgen = SphereN([2, 3, 5, 7])
         >>> points = sgen.pop_batch(100)
         >>> plot_2d_projection(points, projection='xy')  # doctest: +SKIP
@@ -70,7 +70,7 @@ def plot_3d_projection(
         **kwargs: Additional arguments for scatter plot.
 
     Example:
-        >>> from sphere_n.sphere_n import Sphere3
+        >>> from lds_gen.sphere_n import Sphere3
         >>> sgen = Sphere3([2, 3, 5])
         >>> points = sgen.pop_batch(100)
         >>> plot_3d_projection(points)  # doctest: +SKIP
@@ -122,7 +122,7 @@ def plot_distribution_comparison(
         title: Plot title.
 
     Example:
-        >>> from sphere_n.sphere_n import SphereN
+        >>> from lds_gen.sphere_n import SphereN
         >>> import numpy as np
         >>> sgen = SphereN([2, 3, 5, 7])
         >>> lds_points = np.array(sgen.pop_batch(100))
@@ -185,7 +185,7 @@ def animate_points(
         **kwargs: Additional arguments for scatter plot.
 
     Example:
-        >>> from sphere_n.sphere_n import Sphere3
+        >>> from lds_gen.sphere_n import Sphere3
         >>> sgen = Sphere3([2, 3, 5])
         >>> sgen.reseed(42)
         >>> animate_points(sgen, n_points=100)  # doctest: +SKIP

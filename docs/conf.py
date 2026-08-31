@@ -81,7 +81,7 @@ plot_working_directory = os.path.join(__location__, "examples")
 plot_pre_code = [
     "import matplotlib.pyplot as plt",
     "import numpy as np",
-    "from sphere_n.sphere_n import Sphere3, SphereN",
+    "from lds_gen.sphere_n import Sphere3, SphereN",
     "plt.rcParams['figure.dpi'] = 100",
 ]
 
