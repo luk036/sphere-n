@@ -8,7 +8,7 @@ from rich.progress import track
 from scipy.spatial import ConvexHull
 
 from sphere_n.discrep_2 import discrep_2
-from sphere_n.sphere_n import Sphere3
+from lds_gen.sphere_n import Sphere3
 
 # import matplotlib.pylab as lab
 

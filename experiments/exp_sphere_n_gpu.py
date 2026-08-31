@@ -17,7 +17,7 @@ from scipy.spatial import ConvexHull
 
 from sphere_n.cylind_n import CylindN
 from sphere_n.discrep_2 import discrep_2
-from sphere_n.sphere_n import SphereN
+from lds_gen.sphere_n import SphereN
 
 # import time
 
