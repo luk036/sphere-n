@@ -44,7 +44,7 @@ import numpy as np
 from lds_gen.lds import Circle, VdCorput
 
 # 3. Local
-from sphere_n.sphere_n import SphereGen
+from sphere_n.cylind_n import CylindGen
 ```
 
 ### Type Annotations
@@ -125,7 +125,7 @@ sphere-n/
 
 ```python
 from pytest import approx
-from sphere_n.sphere_n import Sphere3
+from lds_gen.sphere_n import Sphere3
 
 def test_sphere3() -> None:
     sgen = Sphere3([2, 3, 5])
