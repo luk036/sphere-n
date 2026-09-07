@@ -3,9 +3,8 @@
 import math
 
 import numpy as np
-from pytest import approx
-
 from lds_gen.sphere_n import get_tp
+from pytest import approx
 
 TABLE_SIZE = 300
 

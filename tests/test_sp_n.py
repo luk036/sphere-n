@@ -55,12 +55,12 @@ distribution of points is needed.
 from typing import Union
 
 import numpy as np
+from lds_gen.sphere_n import SphereN
 from pytest import approx
 from scipy.spatial import ConvexHull
 
 from sphere_n.cylind_n import CylindN
 from sphere_n.discrep_2 import discrep_2
-from lds_gen.sphere_n import SphereN
 
 
 # Write a function that returns a random point on the surface of a sphere

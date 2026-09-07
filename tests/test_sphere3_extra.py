@@ -1,9 +1,8 @@
 """Additional Sphere3 tests covering edge cases."""
 
 import numpy as np
-from pytest import approx
-
 from lds_gen.sphere_n import Sphere3
+from pytest import approx
 
 
 def test_sphere3_pop_batch() -> None:

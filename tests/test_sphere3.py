@@ -1,6 +1,5 @@
-from pytest import approx
-
 from lds_gen.sphere_n import Sphere3
+from pytest import approx
 
 
 def test_sphere3() -> None:
