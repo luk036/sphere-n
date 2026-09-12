@@ -71,8 +71,8 @@ def main() -> None:
     Triples_r = sample_spherical(npoints, n)
     spgen = SphereN(b)
     cygen = CylindN(b)
-    Triples_s = np.array([spgen.pop() for _ in range(npoints)])
-    Triples_c = np.array([cygen.pop() for _ in range(npoints)])
+    Triples_s = np.array(spgen.pop_batch(npoints))
+    Triples_c = np.array(cygen.pop_batch(npoints))
 
     x = list(range(200, npoints, 100))
     res_r = []

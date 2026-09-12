@@ -31,8 +31,8 @@ def main() -> None:
     Triples_r = sample_spherical(npoints, ndim)
     sphopfgen = Sphere3Hopf([2, 3, 5])
     spgen = Sphere3([2, 3, 5])
-    Triples_h = np.array([sphopfgen.pop() for _ in range(npoints)])
-    Triples_s = np.array([spgen.pop() for _ in range(npoints)])
+    Triples_h = np.array(sphopfgen.pop_batch(npoints))
+    Triples_s = np.array(spgen.pop_batch(npoints))
 
     x = list(range(200, npoints, 100))
     res_r = []
