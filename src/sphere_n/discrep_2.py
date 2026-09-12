@@ -15,16 +15,12 @@ def discrep_2(K: NDArray[Any], X: npt.NDArray[np.float64]) -> float:
     Returns:
         float: dispersion
     """
-    nsimplex, n = K.shape
-    maxq = 0
-    minq = np.inf
-    for k in range(nsimplex):
-        p = X[K[k, :], :]
-        for i in range(n - 1):
-            for j in range(i + 1, n):
-                dot = np.dot(p[i, :], p[j, :])
-                q = 1.0 - dot * dot
-                maxq = max(maxq, q)
-                minq = min(minq, q)
+    n = K.shape[1]
+    points = X[K]  # (nsimplex, n, ndim)
+    iu, ju = np.triu_indices(n, k=1)
+    dots = np.einsum("sid,sid->si", points[:, iu], points[:, ju])
+    q = 1.0 - dots * dots
+    maxq = float(q.max())
+    minq = float(q.min())
     dis = np.arcsin(np.sqrt(maxq)) - np.arcsin(np.sqrt(minq))
-    return dis
+    return float(dis)
