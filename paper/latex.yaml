@@ -5,7 +5,9 @@ date: \today
 link-citations: true
 colorlinks: true
 header-includes:
-  - '\ifxetex \usepackage[UTF8]{ctex} \fi'
+  - '\ifxetex'
+  - '\usepackage[UTF8]{ctex}'
+  - '\fi'
   - \usepackage{tikz,pgf,pgfplots}
   - \usepackage{comment}
   - \usetikzlibrary{arrows}
@@ -15,3 +17,7 @@ header-includes:
   - \newcommand{\col}[1]{}
   - \newcommand{\pause}{}
   - \newcommand{\onslide}{}
+  # Place figures at the top or bottom of a page (no inline, no float-only pages).
+  - '\makeatletter'
+  - '\def\fps@figure{tb}'
+  - '\makeatother'
