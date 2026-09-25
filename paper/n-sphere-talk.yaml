@@ -1,0 +1,10 @@
+---
+title: Low-Discrepancy Sampling on Higher-Dimensional Spheres
+author: Wai-Shing Luk
+institute: Fudan University
+date: \today
+bibliography: n-sphere.bib
+classoption:
+  - aspectratio=169
+toc: true
+...
