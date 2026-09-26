@@ -8,6 +8,7 @@ header-includes:
   - '\ifxetex'
   - '\usepackage[UTF8]{ctex}'
   - '\fi'
+  - '\usepackage{algorithm,algpseudocode}'
   - \usepackage{tikz,pgf,pgfplots}
   - \usepackage{comment}
   - \usetikzlibrary{arrows}
