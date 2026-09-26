@@ -49,6 +49,23 @@ that is, the base-$b$ digits of $n$ reflected about the radix point.
 Incrementality is visible in the figure: the first ten points (orange) and the next ten (purple) are each evenly spread, and their union is evenly spread as well. Few other sampling methods have this property.
 
 Concretely, given an index $k$ and a base $b$ (default $2$), the generator returns the $k$-th value of the sequence in $[0,1]$. It repeatedly divides $k$ by $b$ and assembles the fractional value from the remainders; equivalently, it writes $k$ in base $b$ and reads the digits in reverse after the point. For instance, with $b=2$ the third element is $011_2$, which reverses to $0.11_2 = 0.75$.
+```{=latex}
+\begin{algorithm*}[t]
+\caption{Radical inverse (the van der Corput sequence)}
+\begin{algorithmic}[1]
+\Function{RadicalInverse}{$k, b$}
+  \State $r \gets 0$;\quad $f \gets 1$
+  \While{$k > 0$}
+    \State $f \gets f / b$
+    \State $r \gets r + (k \bmod b)\, f$
+    \State $k \gets \lfloor k / b \rfloor$
+  \EndWhile
+  \State \Return $r$
+\EndFunction
+\end{algorithmic}
+\end{algorithm*}
+```
+
 
 ## Unit Circle $S^1$
 
@@ -216,6 +233,25 @@ A point set on $S^n$ is generated as follows:
 - set $\theta_j = f_j^{-1}(t_j)$ by table lookup;
 - assemble the point recursively as $p_n = [\cos\theta_n, \sin\theta_n \cdot p_{n-1}]$.
 
+
+```{=latex}
+\begin{algorithm*}[t]
+\caption{Recursive low-discrepancy point on $S^n$}
+\begin{algorithmic}[1]
+\Function{Pop}{$n, b_1, \dots, b_n$}
+  \State $v \gets \Call{RadicalInverse}{k, b_n}$;\quad $k \gets k + 1$
+  \State $t \gets f_n(0) + \bigl(f_n(\pi) - f_n(0)\bigr)\, v$
+  \State $\theta \gets f_n^{-1}(t)$ \Comment{inverse CDF, table lookup}
+  \If{$n = 2$}
+    \State $s \gets \bigl[\cos(2\pi v_1),\ \sin(2\pi v_1)\bigr]$ \Comment{$v_1 = \mathrm{vdc}(k,b_1)$}
+  \Else
+    \State $s \gets \Call{Pop}{n-1, b_1, \dots, b_{n-1}}$
+  \EndIf
+  \State \Return $\bigl[\sin\theta \cdot s,\ \cos\theta\bigr]$
+\EndFunction
+\end{algorithmic}
+\end{algorithm*}
+```
 ## Implementation
 
 The implementation follows the recursion directly. Its components are:
