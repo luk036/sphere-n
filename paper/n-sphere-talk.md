@@ -13,8 +13,8 @@
 
 - **Robot motion planning** on $S^3$ and $SO(3)$ [@yershova2010generating] -- for path planning and attitude control
 - **Wireless coding** -- spherical codes and MIMO codebooks [@utkovski2006construction]
-- **Multivariate empirical mode decomposition** [@rehman2010multivariate] -- more accurate signal models
-- **Filter bank design** [@mandic2011filter] -- more precise filter parameters
+- **Multivariate empirical mode decomposition** [@rehman2010multivariate] -- direction vectors on higher-dimensional spheres via the **cylindrical mapping**
+- **Filter bank design** [@mandic2011filter] -- the same cylindrical mapping underlies its filter-bank analysis
 - **Statistical and machine learning** -- deterministic coverage of a normalised parameter space
 
 ## The Challenge in Higher Dimensions
@@ -93,6 +93,34 @@
 - $S^3$ is a principal circle bundle over $S^2$
 - Works for $S^3$ only: the cylindrical mapping does **not** extend to $S^n$ for $n > 2$
 
+# Previous Work
+
+## Related Work
+
+- **Low-discrepancy sequences & quasi-Monte Carlo**
+  - van der Corput (1935) [@vandercorput1935]; Halton (1960) [@halton1960]; Sobol' (1967) [@sobol1967]
+- **Equidistribution & designs on the sphere**
+  - Cui & Freeden [@cui1997equidistribution]; Brauchart et al. [@brauchart2012qmc]; Saff & Kuijlaars [@saff1997]
+- **Cylindrical & Hopf mappings**
+  - Wong, Luk & Heng [@wong1997sampling]; Mitchell [@mitchell2008sampling]; Yershova et al. [@yershova2010generating]; Shoemake [@shoemake1992]
+
+## Related Work (cont.)
+
+- **Random sampling on $S^n$**
+  - normalise a Gaussian vector; rejection method [@marsaglia1972; @fishman1996]
+- **Spherical codes & applications**
+  - Grassmannian beamforming [@strohmer2003grassmannian; @love2003grassmannian]
+  - space-time codes from spherical codes [@utkovski2006construction]
+  - multivariate EMD via cylindrical-mapped LDS [@rehman2010multivariate; @mandic2011filter]
+
+## The Gap Addressed Here
+
+- No previous construction is **uniform + deterministic + incremental** on $S^n$ for **arbitrary $n$**
+- Cylindrical and Hopf mappings exploit structure special to $S^2$ / $S^3$
+- Spherical designs and energy minimisation are **not incremental** (adding a point changes the configuration)
+- Random sampling is **not deterministic**
+- This work: van der Corput + **recursive tabulated inverse CDF**
+
 # Our Approach
 
 ## Uniform Sampling on a Unit Disk
@@ -110,38 +138,62 @@
 :::
 ::::
 
+## Why Cylindrical Mapping Works Only for $S^2$
+
+- Write a point of $S^n$ as $p = (\cos\theta_n,\ \sin\theta_n\, u)$, $u \in S^{n-1}$
+- The surface element separates into a height part and a spherical part:
+  $$d^nA = \sin^{n-1}\theta_n\, d\theta_n\, dA_{n-1}(u)$$
+- Substituting the height $z = \cos\theta_n$:
+  $$d^nA = (1-z^2)^{(n-2)/2}\, dA_{n-1}(u)\, dz$$
+- The height weight $(1-z^2)^{(n-2)/2}$ is constant **only when $n = 2$**
+- $S^2$: $d^2A = d\varphi\, dz$ -- uniform $z$ and $\varphi$ is exact (the cylindrical mapping)
+- $n \ge 3$: uniform height is **biased** (over-samples the poles)
+  - draw $\theta_n$ by inverting the CDF of $\sin^{n-1}\theta_n$, i.e. $f_{n-1}$
+
 ## Recursive Construction on $S^n$
 
-- Polar coordinates:
+- Hyperspherical coordinates:
   - $x_0 = \cos\theta_n$
   - $x_1 = \sin\theta_n \cos\theta_{n-1}$
   - $\dots$
   - $x_n = \sin\theta_n \sin\theta_{n-1} \cdots \sin\theta_1$
-- The surface element factorises, but its **inverse has no closed form** for $n \ge 2$
-- Key idea:
-  $$p_n = [\,\cos\theta_n,\; \sin\theta_n \cdot p_{n-1}\,]$$
-  building $S^n$ from a point on $S^{n-1}$
+- Surface element:
+  $$d^nA = \sin^{n-1}\theta_n \sin^{n-2}\theta_{n-1}\cdots\sin\theta_2\, d\theta_1\cdots d\theta_n$$
+- It factorises, but the inverse has **no closed form** for $m \ge 2$
+- Peel off one angle at a time: $p_n = [\,\cos\theta_n,\; \sin\theta_n \cdot p_{n-1}\,]$
 
 ## How to Generate the Point Set
 
-- Let $f_j(\theta) = \int \sin^j\theta \, \mathrm{d}\theta$, defined recursively:
+- Let $f_m(\theta) = \int_0^\theta \sin^m\varphi \, \mathrm{d}\varphi$, defined recursively:
   $$
-  f_j(\theta) = \begin{cases}
-    \theta & j = 0, \\
-    -\cos\theta & j = 1, \\
-    \tfrac{1}{n}\bigl(-\cos\theta\,\sin^{j-1}\theta + (n-1) f_{j-2}(\theta)\bigr) & j \ge 2.
+  f_m(\theta) = \begin{cases}
+    \theta & m = 0, \\
+    -\cos\theta & m = 1, \\
+    \tfrac{1}{m}\bigl(-\cos\theta\,\sin^{m-1}\theta + (m-1) f_{m-2}(\theta)\bigr) & m \ge 2.
   \end{cases}
   $$
-- $f_j$ is monotone on $(0,\pi)$; map $\mathrm{vdc}(k, b_j)$ onto $[f_j(0), f_j(\pi)]$
-- Invert numerically: $\theta_j = f_j^{-1}(t_j)$ by **table lookup**
-- Then recurse with $p_n = [\cos\theta_n, \sin\theta_n \cdot p_{n-1}]$
+- Angle $\theta_j$ ($j = 2,\dots,n$) carries weight $\sin^{j-1}\theta_j$: map $\mathrm{vdc}(k, b_j)$ onto $f_{j-1}$
+- Invert numerically: $\theta_j = f_{j-1}^{-1}(t_j)$ by **table lookup**; $f_0, f_1$ are closed forms
+- Assemble $p_j = [\cos\theta_j,\ \sin\theta_j \cdot p_{j-1}]$ up to $p_n$
+
+## Table Lookup: Numerical Mechanics
+
+- **Resolution**: every table is on a **300-point** grid of $[0,\pi]$
+  - spacing $h = \pi/299 \approx 1.05\times10^{-2}$ rad
+- **Interpolation**: binary search + linear interpolation
+  - $O(\log 300) \approx 9$ comparisons, clamped at the endpoints
+- **Precision**: piecewise-linear error $O(h^2)$
+  - max angular error $\approx 3.4 \,/\, 2.7 \,/\, 2.3 \times 10^{-4}$ rad for $m = 2, 3, 4$
+- **Memory**: 300 doubles $\approx 2.4$ kB per table
+  - $O(n)$ tables, under $20$ kB for $n \le 5$; built lazily and cached
 
 ## Implementation
 
+- Van der Corput generator -- uniform values in $[0,1]$
+- Interpolation routines -- invert the cached tables
 - `SphereGen` -- abstract interface (`pop`, `reseed`)
-- `Sphere3` -- explicit generator for $S^3$
-- `SphereN` -- recursive chain that bottoms out at `Sphere3`
-- Inverse tables are built once by linear interpolation and **cached**
+- `Sphere3` -- explicit generator for $S^3$; `SphereN` -- recursive chain bottoming out at `Sphere3`
+- Any dimension, limited only by memory
 
 ## Reference Implementations
 
@@ -176,14 +228,25 @@
 
 :::: {.columns}
 ::: {.column width="45%"}
-- **Random**: normalise a Gaussian vector, which is uniform on $S^n$
-- **LDS**: the recursive generator
+- **Random**: normalise a Gaussian vector (uniform on $S^n$)
+- **LDS**: `SphereN` vs the `CylindN` baseline
 - Left: ours, right: random
 :::
 ::: {.column width="55%"}
 ![](res_compare.pdf){width="100%"}
 :::
 ::::
+
+## Dispersion at $N = 600$ (30 random trials)
+
+| Sphere (bases) | Random | CylindN | SphereN |
+|---|---|---|---|
+| $S^3$ (2,3,5) | $0.845 \pm 0.041$ | 0.659551 | **0.650145** |
+| $S^4$ (2,3,5,7) | $1.090 \pm 0.038$ | 1.050584 | **0.912591** |
+| $S^5$ (2,3,5,7,11) | $1.252 \pm 0.041$ | 1.358791 | **1.035655** |
+
+- Lower is better; `SphereN` is lowest on every sphere
+- Beats the random **mean** by more than one standard deviation
 
 ## Results: $S^3$ vs Hopf Coordinate Method
 
