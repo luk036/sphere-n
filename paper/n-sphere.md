@@ -4,11 +4,17 @@ author:
 bibliography:
   - n-sphere.bib
 title: Low-Discrepancy Sampling on Higher-Dimensional Spheres
+abstract: >-
+  This paper studies the generation of low-discrepancy point sets on $n$-dimensional spheres.
+  Low-discrepancy sequences (LDS) are widely used in numerical integration, optimisation and
+  simulation, and the quality of a point set on $S^n$ is governed by three properties: uniformity,
+  determinism and incrementality. We propose a construction of low-discrepancy sequences on $S^n$
+  based on the van der Corput sequence, and describe the recursive algorithm, the lookup tables
+  that implement its inverse, and reference implementations in several languages. Numerical
+  experiments compare the proposed method with random sampling and with established approaches,
+  namely the Hopf-coordinate and cylindrical-mapping methods; because random sampling is
+  stochastic, its dispersion is reported as a mean and standard deviation over independent trials.
 ...
-
-# Abstract {.unnumbered}
-
-This paper studies the generation of low-discrepancy point sets on $n$-dimensional spheres. Low-discrepancy sequences (LDS) are widely used in numerical integration, optimisation and simulation, and the quality of a point set on $S^n$ is governed by three properties: uniformity, determinism and incrementality. We propose a construction of low-discrepancy sequences on $S^n$ based on the van der Corput sequence, and describe the algorithm and its implementation in detail. Numerical experiments compare the proposed method with random sampling and with established approaches, namely the Hopf-coordinate and cylindrical-mapping methods.
 
 # Motivation
 
@@ -28,17 +34,17 @@ This paper proposes a construction of low-discrepancy sequences on $S^n$ based o
 
 - **Robot motion planning** [@yershova2010generating]. On $S^3$ and $SO(3)$, Halton point sets are evenly distributed and therefore suit path planning and attitude control, improving both computational efficiency and trajectory accuracy.
 - **Wireless communication coding** [@utkovski2006construction]. In spherical coding for MIMO systems the points serve as codewords, improving signal stability and transmission quality.
-- **Multivariate empirical mode decomposition** [@rehman2010multivariate]. Halton points support more accurate signal models.
-- **Filter bank design** [@mandic2011filter]. They allow more precise filter parameters to be constructed.
+- **Multivariate empirical mode decomposition** [@rehman2010multivariate]. Direction vectors on higher-dimensional spheres, obtained by the cylindrical mapping of low-discrepancy sequences, support more accurate signal models.
+- **Filter bank design** [@mandic2011filter]. The same cylindrical mapping underlies the filter-bank analysis of multivariate empirical mode decomposition, allowing more precise filter parameters to be constructed.
 - **Statistical and machine learning.** They provide deterministic, evenly distributed coverage of a normalised parameter space.
 
-Section 2 reviews low-discrepancy sequences, Section 3 presents the proposed method on $S^n$, Section 4 reports the numerical experiments, and Section 5 concludes.
+Section 2 reviews low-discrepancy sequences, Section 3 surveys related work, Section 4 presents the construction on $S^n$ together with the numerical details of its table lookup, Section 5 describes the reference implementations and their cross-language verification, Section 6 reports the numerical experiments, and Section 7 concludes.
 
 # Overview of Low-Discrepancy Sequences
 
 ## The van der Corput Sequence
 
-The van der Corput sequence is the one-dimensional low-discrepancy sequence on $[0,1]$. It is constructed by reversing the base-$b$ digits of the non-negative integers, where $b$ is usually prime, and it is named after the Dutch mathematician Johannes van der Corput, who introduced it in 1935. Writing $n = \sum_{k \ge 0} a_k b^k$ with digits $a_k \in \{0,\dots,b-1\}$, the $n$-th term is the *radical inverse*
+The van der Corput sequence is the one-dimensional low-discrepancy sequence on $[0,1]$. It is constructed by reversing the base-$b$ digits of the non-negative integers, where $b$ is usually prime, and it is named after the Dutch mathematician Johannes van der Corput, who introduced it in 1935 [@vandercorput1935]. Writing $n = \sum_{k \ge 0} a_k b^k$ with digits $a_k \in \{0,\dots,b-1\}$, the $n$-th term is the *radical inverse*
 
 $$\phi_b(n) = \sum_{k \ge 0} \frac{a_k}{b^{k+1}},$$
 
@@ -81,7 +87,7 @@ The essential step is the conversion of a one-dimensional sequence into points o
 
 ## Halton Sequence on $[0,1]^n$
 
-The Halton sequence combines two or more van der Corput sequences that use distinct prime bases; it is named after Halton and Rutishauser, who developed it in the 1960s. The resulting points are evenly distributed over the unit square, without the regularity of a grid, which makes the sequence useful for two-dimensional sampling.
+The Halton sequence combines two or more van der Corput sequences that use distinct prime bases; it is named after Halton and Rutishauser, who developed it in the 1960s [@halton1960]. The resulting points are evenly distributed over the unit square, without the regularity of a grid, which makes the sequence useful for two-dimensional sampling.
 
 ![Example of the Halton sequence](halton.svg){width="90%"}
 
@@ -100,7 +106,7 @@ Such point sets are the basis of quasi-Monte Carlo (QMC) methods.
 
 ## Unit Sphere $S^2$
 
-Points on the unit sphere can be generated by combining a one-dimensional sequence for the height with a circular sequence for the horizontal position; this cylindrical mapping has been used in computer graphics [@wong1997sampling]. Given the azimuth $\varphi$ and the height $z$, the point is
+Points on the unit sphere can be generated by combining a one-dimensional sequence for the height with a circular sequence for the horizontal position. This cylindrical mapping has been used in computer graphics [@wong1997sampling] and, applied recursively, it is also the basis for generating low-discrepancy point sets on higher-dimensional spheres in multivariate empirical mode decomposition [@rehman2010multivariate; @mandic2011filter]. Given the azimuth $\varphi$ and the height $z$, the point is
 
 $$[x,y,z] = [\,r\cos\varphi,\; r\sin\varphi,\; z\,], \qquad r = \sqrt{1-z^2},$$
 
@@ -130,11 +136,27 @@ Three van der Corput sequences supply the angles:
 
 The first two values are scaled to angles, the third determines $\theta$, and the four coordinates follow from the Hopf formulae.
 
+# Previous Work
+
+The construction proposed in this paper draws on several lines of work, which we briefly survey before presenting the method.
+
+**Low-discrepancy sequences and quasi-Monte Carlo.** The deterministic generation of well-spread points began with the van der Corput sequence [@vandercorput1935], which Halton [@halton1960] extended to several dimensions using pairwise-coprime bases; the Sobol' sequence [@sobol1967] is a widely used alternative. Together these sequences form the basis of quasi-Monte Carlo integration, where deterministic point sets replace pseudo-random points and improve the convergence rate for sufficiently smooth integrands.
+
+**Equidistribution and designs on the sphere.** Distributing points evenly on the sphere is a classical problem. Cui and Freeden [@cui1997equidistribution] study equidistribution on $S^2$ and its use in quadrature, while Brauchart et al. [@brauchart2012qmc] analyse quasi-Monte Carlo designs that attain optimal-order integration error. Saff and Kuijlaars [@saff1997] survey the competing criteria, such as covering radius and Riesz energy, that lead to the Fibonacci-lattice and spiral configurations for distributing many points on a sphere.
+
+**Cylindrical and Hopf mappings.** In computer graphics, Wong, Luk and Heng [@wong1997sampling] popularised the cylindrical equal-area mapping, which converts two one-dimensional low-discrepancy values into a point on $S^2$ with uniform area density. On $S^3$ and $SO(3)$, the Hopf fibration underlies the incremental grids of Mitchell [@mitchell2008sampling] and Yershova et al. [@yershova2010generating], while the quaternion construction of Shoemake [@shoemake1992] provides the corresponding uniform random baseline.
+
+**Random sampling.** For comparison, points uniform on $S^n$ can be obtained either by normalising a Gaussian vector or by the rejection method of Marsaglia [@marsaglia1972]; Fishman [@fishman1996] gives a textbook treatment. These stochastic constructions are simple, but they are neither deterministic nor incremental.
+
+**Spherical codes and applications.** Spherical and Grassmannian codes are central to MIMO communication: Strohmer and Heath [@strohmer2003grassmannian] and Love et al. [@love2003grassmannian] design Grassmannian beamforming codebooks, and Utkovski and Lindner [@utkovski2006construction] construct space-time codes from high-dimensional spherical codes. In signal processing, Rehman and Mandic [@rehman2010multivariate] and Mandic et al. [@mandic2011filter] build multivariate empirical mode decomposition and its filter-bank analysis by projecting the signal along direction vectors on higher-dimensional spheres, generating those vectors from low-discrepancy sequences through the cylindrical mapping. This is the same family of constructions that we use as the `CylindN` baseline in the experiments.
+
+**Gap addressed here.** None of these approaches simultaneously provides uniformity, determinism and incrementality on $S^n$ for arbitrary $n$. The cylindrical and Hopf mappings exploit structure that is special to $S^2$ and $S^3$; optimisation-based designs, such as spherical designs and energy-minimising configurations, are not incremental, because adding a point changes the entire configuration; and random sampling is not deterministic. The construction developed below closes this gap by combining the van der Corput sequence with a recursive, tabulated inverse cumulative distribution that extends to any dimension.
+
 # Our Approach
 
-## Uniform Sampling on a Unit Disk
+## Warm-up: Uniform Sampling on the Unit Disk
 
-The unit disk illustrates the general principle. To sample it uniformly one examines the surface element, which in polar coordinates $(r,\theta)$ is
+The construction rests on a single idea: to sample a manifold uniformly, cancel its surface-element weight by inverting the cumulative distribution of that weight. The planar unit disk is the simplest instance, and the sphere below is its direct higher-dimensional analogue. In polar coordinates $(r,\theta)$ the disk's area element is
 
 $$
 dA = r \, dr \, d\theta. \tag{1}
@@ -152,37 +174,58 @@ shows that the radial weight is $r$, so the inverse function needed to cancel it
 - $r = \sqrt{\mathrm{vdc}(k,b_2)}$,
 - $[x,y] = [r\cos\theta, r\sin\theta]$.
 
-The same reasoning applies to the boundary and to the interior.
+The same recipe is applied to spherical boundaries in the following subsections; only the weight changes, from the radial factor $r$ to the trigonometric surface element of $S^n$.
 
 ![Example of the unit-disk sequence](disk.svg){width="90%"}
 
+## Why the Cylindrical Mapping Works Only for $S^2$
+
+The cylindrical mapping of the unit sphere is a special case, and the surface element shows exactly why it cannot be extended. Write a point of $S^n$ as
+
+$$p = (\cos\theta_n,\ \sin\theta_n\, u), \qquad u \in S^{n-1},$$
+
+so that $\theta_n$ is the angle to the distinguished axis and $u$ is the equatorial direction. The surface element then decomposes into a height part and a spherical part,
+
+$$d^nA = \sin^{n-1}\theta_n\, d\theta_n\, dA_{n-1}(u).$$
+
+Substituting the height $z = \cos\theta_n$, for which $\sin\theta_n\, d\theta_n = -dz$, turns this into
+
+$$d^nA = (1-z^2)^{(n-2)/2}\, dA_{n-1}(u)\, dz.$$
+
+The height and the equatorial direction separate, but the height carries the weight $(1-z^2)^{(n-2)/2}$, which is constant only when $(n-2)/2 = 0$, that is, when $n = 2$. For the $2$-sphere the surface element is therefore
+
+$$d^2A = d\varphi\, dz,$$
+
+with no height dependence: sampling the azimuth $\varphi$ and the height $z$ independently and uniformly reproduces the area measure exactly, which is precisely the cylindrical mapping of Section 2.
+
+For $n \ge 3$ the weight $(1-z^2)^{(n-2)/2}$ is not constant, so a uniform height $z \in [-1,1]$ is biased. It over-samples the poles, where the true density is lowest, and under-samples the equator, where it is highest. Sampling the azimuth uniformly remains correct, but the height must be drawn from the density proportional to $(1-z^2)^{(n-2)/2}$; equivalently, $\theta_n$ must be drawn by inverting the cumulative integral of $\sin^{n-1}\theta_n$. That inverse is the function $f_{n-1}$ met in the following subsections, and it is the reason the construction replaces the uniform height of the cylindrical mapping by a table lookup. The equatorial direction $u \in S^{n-1}$ is then handled by the same procedure, recursively.
+
 ## Higher Dimensions: $S^3$ and Beyond
 
-In higher dimensions the surface element is more complicated and its inverse is no longer obvious. The polar coordinates of $S^3$ are
+On the sphere the surface element is more complicated and its inverse is no longer obvious. In hyperspherical coordinates the $3$-sphere $S^3$ has the parametrisation
 
 - $x_0 = \cos\theta_3$,
 - $x_1 = \sin\theta_3\cos\theta_2$,
 - $x_2 = \sin\theta_3\sin\theta_2\cos\theta_1$,
 - $x_3 = \sin\theta_3\sin\theta_2\sin\theta_1$,
 
-with surface element
+with $\theta_1 \in [0,2\pi)$ and $\theta_2,\theta_3 \in [0,\pi]$, and surface element
 
-$$dA = \sin^{2}(\theta_3)\sin(\theta_2)\,d\theta_1\,d\theta_2\,d\theta_3.$$
+$$dA = \sin^{2}\theta_3\,\sin\theta_2\,d\theta_1\,d\theta_2\,d\theta_3.$$
 
-The construction proceeds recursively:
+Only the azimuth $\theta_1$ carries constant weight; each remaining angle $\theta_j$ enters with weight $\sin^{j-1}\theta_j$, so it is sampled by inverting the cumulative integral of that weight. The construction builds $S^3$ recursively from the circle:
 
-- start from $p_0 = [\cos\theta_0, \sin\theta_0]$ with $\theta_0 = 2\pi\,\mathrm{vdc}(k,b_0)$;
-- with $f_2(\theta) = \int\sin^2\theta\,\mathrm{d}\theta = \tfrac{1}{2}(\theta - \cos\theta\sin\theta)$, map $\mathrm{vdc}(k,b_2)$ onto $f_2$ by $t_2 = (\pi/2)\,\mathrm{vdc}(k,b_2)$;
-- recover $\theta_2 = f_2^{-1}(t_2)$ by table lookup;
-- set $p_2 = [\sin\theta_2 \cdot p_1, \cos\theta_1]$.
+- start from the unit circle $p_1 = [\cos\theta_1, \sin\theta_1]$ with $\theta_1 = 2\pi\,\mathrm{vdc}(k,b_1)$;
+- the angle $\theta_2$ has weight $\sin\theta_2$, whose inverse is the closed form $\theta_2 = \cos^{-1}(1 - 2\,\mathrm{vdc}(k,b_2))$, giving a point $p_2$ on $S^2$;
+- with $f_2(\theta) = \int_0^\theta \sin^2\varphi\,\mathrm{d}\varphi = \tfrac{1}{2}(\theta - \cos\theta\sin\theta)$, map $\mathrm{vdc}(k,b_3)$ onto $f_2$ by $t = f_2(0) + (f_2(\pi)-f_2(0))\,\mathrm{vdc}(k,b_3) = (\pi/2)\,\mathrm{vdc}(k,b_3)$;
+- recover $\theta_3 = f_2^{-1}(t)$ by table lookup;
+- set $p_3 = [\cos\theta_3,\ \sin\theta_3 \cdot p_2]$.
 
 ## Generalisation to $S^n$
 
-The same recursion applies in any dimension, but its inverse function has no closed form for $n \ge 2$. Only the cases $n = 0$ (a point) and $n = 1$ (the circle) admit closed-form inverses; for $n \ge 2$ the inverse must be tabulated numerically. The mapping function is defined recursively, so higher-dimensional spheres are built from lookup tables.
+The same recursion applies in every dimension. Writing $f_m(\theta) = \int_0^\theta \sin^m\varphi\,\mathrm{d}\varphi$, only $f_0$ and $f_1$ admit closed-form inverses; for $m \ge 2$ the inverse $f_m^{-1}$ has no closed form and must be tabulated numerically. Because the recurrence that defines $f_m$ is itself recursive, higher-dimensional spheres are generated from a family of lookup tables.
 
-Two classes implement the idea: `Sphere3` generates points on $S^3$ directly, and `SphereN` builds higher-dimensional spheres recursively, each instance handling one dimension and delegating the rest to a lower-dimensional generator. Because the recursion bottoms out at $S^3$, points can be generated in any dimension, limited only by memory.
-
-The polar coordinates of $S^n$ are
+The hyperspherical coordinates of $S^n$ are
 
 - $x_0 = \cos\theta_n$,
 - $x_1 = \sin\theta_n\cos\theta_{n-1}$,
@@ -191,83 +234,95 @@ The polar coordinates of $S^n$ are
 - $x_{n-1} = \sin\theta_n\sin\theta_{n-1}\cdots\cos\theta_1$,
 - $x_n = \sin\theta_n\sin\theta_{n-1}\cdots\sin\theta_1$,
 
-with surface element
+where $\theta_1 \in [0,2\pi)$ and $\theta_2,\dots,\theta_n \in [0,\pi]$, with surface element
 
 $$
-\begin{aligned}
-d^nA  = {}& \sin^{n-2}(\theta_{n-1})\sin^{n-1}(\theta_{n-2})\cdots \\
-& \sin(\theta_{2})\,d\theta_1 \, d\theta_2\cdots d\theta_{n-1}.
-\end{aligned}
+d^nA = \sin^{n-1}\theta_n\,\sin^{n-2}\theta_{n-1}\cdots\sin\theta_2\,d\theta_1\,d\theta_2\cdots d\theta_n.
 $$
 
 ## How to Generate the Point Set
 
-A point set on $S^n$ is generated as follows:
+A point on $S^n$ is assembled from $n$ van der Corput values, one per angle:
 
-- set $p_0 = [\cos\theta_1, \sin\theta_1]$ with $\theta_1 = 2\pi\,\mathrm{vdc}(k,b_1)$;
-- let $f_j(\theta) = \int\sin^j\theta\,\mathrm{d}\theta$ on $(0,\pi)$, defined recursively by
+- set $p_1 = [\cos\theta_1, \sin\theta_1]$ with $\theta_1 = 2\pi\,\mathrm{vdc}(k,b_1)$;
+- let $f_m(\theta) = \int_0^\theta \sin^m\varphi\,\mathrm{d}\varphi$ on $(0,\pi)$, defined recursively by
 
   {\footnotesize
   $$
-  f_j(\theta) =
+  f_m(\theta) =
   \begin{cases}
-    \theta          & j = 0 , \\
-    -\cos\theta     & j = 1 , \\
+    \theta          & m = 0 , \\
+    -\cos\theta     & m = 1 , \\
     \begin{aligned}
-    (1/n)(-\cos\theta&\sin^{j-1}\theta\\
-     &+(n-1) f_{j-2}(\theta))
-    \end{aligned} & j \ge 2 .
+    (1/m)\bigl(-\cos\theta&\sin^{m-1}\theta\\
+     &+(m-1) f_{m-2}(\theta)\bigr)
+    \end{aligned} & m \ge 2 .
   \end{cases}
   $$
   }
 
-  For example, the two forms of $f_2$ are
+  For example, the two equivalent forms of $f_3$ are
   $$
   \begin{aligned}
   &(1/3)( -\cos\theta \sin^2\theta - 2 \cos\theta)\\
   &(-1/3) \cos\theta (3 - \cos^2\theta).
   \end{aligned}
   $$
-  Note that $f_j$ is monotone increasing on $(0,\pi)$;
-- map $\mathrm{vdc}(k,b_j)$ uniformly onto $f_j$ by $t_j = f_j(0) + (f_j(\pi)-f_j(0))\,\mathrm{vdc}(k,b_j)$;
-- set $\theta_j = f_j^{-1}(t_j)$ by table lookup;
-- assemble the point recursively as $p_n = [\cos\theta_n, \sin\theta_n \cdot p_{n-1}]$.
+  Each $f_m$ is monotone increasing on $(0,\pi)$;
+- for the angle $\theta_j$ with $j = 2,\dots,n$, which carries the weight $\sin^{j-1}\theta_j$, map $\mathrm{vdc}(k,b_j)$ uniformly onto $f_{j-1}$ by $t_j = f_{j-1}(0) + (f_{j-1}(\pi)-f_{j-1}(0))\,\mathrm{vdc}(k,b_j)$;
+- set $\theta_j = f_{j-1}^{-1}(t_j)$ by table lookup ($f_0$ and $f_1$ reduce to the closed forms of the previous subsection);
+- assemble the point recursively as $p_j = [\cos\theta_j,\ \sin\theta_j \cdot p_{j-1}]$, up to $p_n$.
 
 
 ```{=latex}
 \begin{algorithm*}[t]
-\caption{Recursive low-discrepancy point on $S^n$}
+\caption{Point on $S^n$ at sequence index $k$}
 \begin{algorithmic}[1]
-\Function{Pop}{$n, b_1, \dots, b_n$}
-  \State $v \gets \Call{RadicalInverse}{k, b_n}$;\quad $k \gets k + 1$
-  \State $t \gets f_n(0) + \bigl(f_n(\pi) - f_n(0)\bigr)\, v$
-  \State $\theta \gets f_n^{-1}(t)$ \Comment{inverse CDF, table lookup}
-  \If{$n = 2$}
-    \State $s \gets \bigl[\cos(2\pi v_1),\ \sin(2\pi v_1)\bigr]$ \Comment{$v_1 = \mathrm{vdc}(k,b_1)$}
-  \Else
-    \State $s \gets \Call{Pop}{n-1, b_1, \dots, b_{n-1}}$
+\Function{PointAt}{$k, n, b_1, \dots, b_n$}
+  \If{$n = 1$}
+    \State $v_1 \gets \Call{RadicalInverse}{k, b_1}$
+    \State \Return $\bigl[\cos(2\pi v_1),\ \sin(2\pi v_1)\bigr]$
   \EndIf
-  \State \Return $\bigl[\sin\theta \cdot s,\ \cos\theta\bigr]$
+  \State $v \gets \Call{RadicalInverse}{k, b_n}$
+  \State $t \gets f_{n-1}(0) + \bigl(f_{n-1}(\pi) - f_{n-1}(0)\bigr)\, v$
+  \State $\theta \gets f_{n-1}^{-1}(t)$ \Comment{inverse CDF, table lookup}
+  \State $s \gets \Call{PointAt}{k, n-1, b_1, \dots, b_{n-1}}$
+  \State \Return $\bigl[\cos\theta,\ \sin\theta \cdot s\bigr]$
 \EndFunction
 \end{algorithmic}
 \end{algorithm*}
 ```
-## Implementation
+## Numerical Mechanics of the Table Lookup
 
-The implementation follows the recursion directly. Its components are:
+For each order $m \ge 2$ the inverse $f_m^{-1}$ is replaced by a table that is built once and cached for the lifetime of the process:
 
-1. the van der Corput generator, which produces uniform values in $[0,1]$;
-2. interpolation routines that map these values onto the sphere;
+- **Resolution.** Every table is sampled on the same $300$-point uniform grid of $[0,\pi]$, with spacing $h = \pi/299 \approx 1.05\times10^{-2}$ rad. The recurrence for $f_m$ is evaluated at those nodes, so no iterative root finding is required.
+- **Interpolation.** To invert a target $t$, the bracketing nodes are found by binary search and the value is recovered by linear interpolation; the lookup costs $O(\log 300) \approx 9$ comparisons and is clamped at the endpoints. The scalar `bisect`-based routine and the vectorised `numpy.interp` routine share the same grid.
+- **Precision.** Because the inverse is recovered by piecewise-linear interpolation, the discretisation error in the angle is $O(h^2)$. Measured against a $200000$-point reference grid, the maximum error is $3.4\times10^{-4}$, $2.7\times10^{-4}$ and $2.3\times10^{-4}$ rad for $m = 2, 3, 4$ respectively; increasing the node count reduces the error quadratically.
+- **Memory.** A table holds $300$ double-precision values, about $2.4$ kB. Generating on $S^n$ requires $f_2,\dots,f_{n-1}$ together with a few shared trigonometric grids, giving $O(n)$ tables and under $20$ kB for $n \le 5$; the tables are built lazily and cached.
+
+# Implementation
+
+The construction is implemented in Python, Rust and C++; every version follows the same recursion. The components are:
+
+1. a van der Corput generator producing uniform values in $[0,1]$;
+2. interpolation routines that invert the cached tables of the previous subsection;
 3. the abstract `SphereGen` interface, which fixes the common methods `pop` and `reseed`;
-4. the recursive generators `Sphere3` and `SphereN`.
+4. two recursive generators: `Sphere3` generates points on $S^3$ directly, and `SphereN` builds a higher-dimensional sphere from a lower-dimensional one, delegating the remaining coordinates to a child generator and bottoming out at $S^3$.
+
+Because the recursion bottoms out at $S^3$, points can be generated in any dimension, limited only by memory.
 
 Generation begins by constructing a `SphereN` object, which uses `Sphere3` or further `SphereN` instances for the lower dimensions. Each point combines one van der Corput value, through sine, cosine and interpolation, with the coordinates of the lower-dimensional sphere.
 
-## Software and Cross-Language Verification
+## Reference Implementations
 
 Reference implementations of the construction are available in several languages: `lds-gen` (Python), `lds-rs` (Rust), and the C++20 libraries `lds-cpp` and `lds-gen-cpp`. All four provide the same core generators (`VdCorput`, `Halton`, `Circle`, `Disk`, `Sphere`, `Sphere3Hopf` and `HaltonN`), whereas the recursive `Sphere3` and `SphereN` generators currently exist in Python, Rust and `lds-gen-cpp` only.
 
+## Cross-Language Verification
+
 The implementations agree numerically. For a fixed seed the core generators produce bit-identical output across languages, and the recursive sphere generators agree to at least fifteen decimal places; the only discrepancy observed was a single coordinate differing in the sixteenth decimal place, which is consistent with machine epsilon for double precision and with the different `libm` implementations used by the compilers and interpreters.
+
+## Performance
 
 Because each generator is stateful, concurrency is handled differently. Python guards `pop` and `reseed` with a lock, Rust uses a lock-free atomic counter, and the C++ implementations are not thread-safe and assume a single thread. This choice interacts with performance: measured timings for the recursive sphere generators, in nanoseconds per point, are 657 (C++), 1035 (Rust) and 7749 (Python) for `Sphere3`; 1665, 1607 and 12153 for `SphereN` on $S^4$; and 2312, 2020 and 48443 for `SphereN` on $S^5$. Compile-time template bases let the C++ compiler replace the modulo by a multiplication, making it fastest for the shallow generator, while Rust's lock-free counter scales better with recursion depth and is fastest for $S^4$ and $S^5$; Python carries interpreter overhead in the table lookup and the trigonometric evaluation.
 
@@ -281,9 +336,9 @@ $$
 
 where $D(a,b) = \sqrt{1 - a^\mathsf{T} b}$. A smaller value indicates a more uniform point set.
 
-The parameters are fixed: 600 points, on a five-dimensional sphere for the random method and a four-dimensional sphere for the LDS methods. The dispersion of each method is compared with its expected value.
+Point sets are generated on $S^3$, $S^4$ and $S^5$ using the prime bases $(2,3,5)$, $(2,3,5,7)$ and $(2,3,5,7,11)$. Table 1 reports $600$-point sets for every method, whereas the figures sweep the number of points to show how the dispersion behaves as the set grows.
 
-Random points on $S^n$ are obtained by normalising a vector drawn from a multidimensional Gaussian density; the spherical symmetry of the density makes the result uniformly distributed on $S^n$ (Fishman 1996). The LDS points are produced by the `SphereN` and `CylindN` generators.
+Random points on $S^n$ are obtained by normalising a vector drawn from a multidimensional Gaussian density; the spherical symmetry of the density makes the result uniformly distributed on $S^n$ [@fishman1996]. Because this construction is stochastic, each random entry in Table 1 is the mean of $30$ independent trials, with the standard deviation reported alongside it. The LDS points, produced by the `SphereN` and `CylindN` generators, are deterministic and are reported as single values.
 
 ![Left: our method, right: random](res_compare.svg)
 
@@ -296,19 +351,20 @@ Random points on $S^n$ are obtained by normalising a vector drawn from a multidi
 ![Result for $S^5$ compared with cylindrical mapping](res-S5-cylin.svg){width="90%"}
 
 Table 1 reports the dispersion of 600-point sets generated by random sampling and by
-the two deterministic generators. Lower values indicate a more uniform point set.
+the two deterministic generators. Lower values indicate a more uniform point set; the
+random column gives the mean $\pm$ one standard deviation over 30 independent trials.
 
 ```{=latex}
 \begin{table*}[t]
 \centering
-\caption{Dispersion of 600-point sets on $S^3$, $S^4$ and $S^5$ (lower is better; the best value in each row is in bold).}
+\caption{Dispersion of 600-point sets on $S^3$, $S^4$ and $S^5$ (lower is better; random entries are means over 30 trials; the best value in each row is in bold).}
 \begin{tabular}{lrrr}
 \hline
-Sphere (bases) & Random & \texttt{CylindN} & \texttt{SphereN} \\
+Sphere (bases) & Random (30 trials) & \texttt{CylindN} & \texttt{SphereN} \\
 \hline
-$S^3$ ($2,3,5$) & 0.864776 & 0.659551 & \textbf{0.650145} \\
-$S^4$ ($2,3,5,7$) & 1.098519 & 1.050584 & \textbf{0.912591} \\
-$S^5$ ($2,3,5,7,11$) & 1.276186 & 1.358791 & \textbf{1.035655} \\
+$S^3$ ($2,3,5$) & $0.845 \pm 0.041$ & 0.659551 & \textbf{0.650145} \\
+$S^4$ ($2,3,5,7$) & $1.090 \pm 0.038$ & 1.050584 & \textbf{0.912591} \\
+$S^5$ ($2,3,5,7,11$) & $1.252 \pm 0.041$ & 1.358791 & \textbf{1.035655} \\
 \hline
 \end{tabular}
 \end{table*}
@@ -316,9 +372,9 @@ $S^5$ ($2,3,5,7,11$) & 1.276186 & 1.358791 & \textbf{1.035655} \\
 
 ## Validation
 
-To check the generator, the computed dispersion is compared with its expected value using an approximate-equality test that tolerates small decimal differences. The proposed method is compared with random sampling, with the Hopf-coordinate method on $S^3$, and with cylindrical mapping on $S^4$ and $S^5$.
+Reference values for the dispersion are pinned down by regression tests that compare the computed values with the tabulated numbers to within a small decimal tolerance. The proposed method is compared with random sampling, with the Hopf-coordinate method on $S^3$, and with cylindrical mapping on $S^4$ and $S^5$.
 
-The proposed method is markedly more uniform than the Hopf-coordinate method on $S^3$, and more uniform than cylindrical mapping on $S^4$ and $S^5$. The advantage is most pronounced when the number of points is small.
+The proposed method is more uniform than the Hopf-coordinate method on $S^3$ and than cylindrical mapping on $S^4$ and $S^5$. On every sphere its dispersion is below the mean of the random baseline by more than one standard deviation, and the advantage is most pronounced when the number of points is small.
 
 # Conclusions
 
