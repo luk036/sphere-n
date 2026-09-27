@@ -180,3 +180,6 @@ MANIFEST
 # Cache dirs
 .ruff_cache/
 .benchmarks/
+
+# Reference papers (downloaded PDFs, kept locally; not tracked)
+/refs/
