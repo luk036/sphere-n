@@ -41,12 +41,12 @@ from __future__ import print_function
 import matplotlib.pyplot as plt
 import numpy as np
 from lds_gen.lds import PRIME_TABLE
+from lds_gen.sphere_n import SphereN
 from rich.progress import track
 from scipy.spatial import ConvexHull
 
 from sphere_n.cylind_n import CylindN
 from sphere_n.discrep_2 import discrep_2
-from lds_gen.sphere_n import SphereN
 
 # import matplotlib.pylab as lab
 
