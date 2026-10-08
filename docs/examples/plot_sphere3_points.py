@@ -6,7 +6,6 @@ Generates and visualizes points on a 3-sphere using low-discrepancy sequences.
 """
 import matplotlib.pyplot as plt
 import numpy as np
-
 from lds_gen.sphere_n import Sphere3
 
 sgen = Sphere3([2, 3, 5])

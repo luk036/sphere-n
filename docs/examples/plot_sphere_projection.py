@@ -6,7 +6,6 @@ Compares XY and XZ projections of 3-sphere points.
 """
 import matplotlib.pyplot as plt
 import numpy as np
-
 from lds_gen.sphere_n import Sphere3
 
 sgen = Sphere3([2, 3, 5])
