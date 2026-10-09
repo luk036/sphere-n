@@ -5,6 +5,37 @@ All notable changes to sphere-n will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2026-10-09
+
+### Performance
+- **Vectorized `discrep_2` dispersion measure**: Replaced the per-pair Python loop with a single pair-indexed einsum over all simplices — ~60× speedup with identical results. (#49954f2)
+- **Batch API in dispersion experiments**: Generate point sets via `pop_batch` instead of per-point `pop()` loops. (#8048078)
+
+### Bug Fixes
+- **Pandoc-safe paper config**: Split the multi-command `\ifxetex` header-include that pandoc 3.11 mangles and pinned figure floats via `\fps@figure{tb}`. (#a7ed973)
+- **mypy config**: Removed the duplicate `ignore_missing_imports` entry. (#1cad724)
+- **RTD docs build**: Added `matplotlib` and `numpy` to `docs/requirements.txt`. (#f694c73)
+
+### Testing & Code Quality
+- **Coverage raised 89% → 100%**: Added `iter_batch` and invalid-dimension coverage tests. (#1977e02)
+
+### Code Cleanup
+- **Consolidated onto `lds_gen.sphere_n`**: Dropped the duplicated numpy `sphere_n.py`; `Sphere3` / `SphereN` / `get_tp` now come from the sibling `lds-gen` package. Rewired visualization, tests, and docs. (#47615a8, #89f28ed, #2ac31da, #e50ea9b)
+- **Removed AI slop & fixed import order**: Stripped docstring/comment boilerplate and fixed import order in the experiment and docs scripts. (#51cabe9, #dab19cc, #8eb74d9)
+
+### Documentation
+- **n-sphere paper overhaul**: Restructured and expanded the paper (Previous Work, cylindrical-mapping surface-element explanation, lookup-table numerics, recursive-integral indexing fix, dispersion reported as mean ± std over 30 trials), added algorithm pseudocode and a dispersion results table, and polished the prose. (#024e66c, #789c20c, #c602d8a, #6ee2053)
+- **Beamer presentation**: Added `n-sphere-talk.md` and the generated 16:9 slides, updated to match the paper. (#181a53f, #5da4649)
+- **Paper TODO list**: Added. (#fc45891)
+
+### Build & CI
+- **Paper build pipeline**: Added a pdflatex `Makefile` and `svg2pdf.lua` filter with pre-rendered SVG→PDF figure twins, switched the document to IEEEtran with a vendored `ieee.csl`, and loaded the algorithm packages. (#311e55b, #020a3e1, #30cc302, #10aa012)
+- **Updated GitHub Actions**: `setup-python`→v5, `codecov-action`→v4; removed the stale `.bak` workflow. (#cbe6431, #3af3d3c)
+
+### Maintenance
+- **Stop tracking `refs/`**: Added `/refs/` to `.gitignore` and removed the previously tracked reference PDFs/slides from the index (kept on disk). (#bdbaaf7, #cf95100)
+- **Added `.opencode/package-lock.json`**. (#b80c476)
+
 ## [0.6.0] - 2026-07-16
 
 ### Performance
